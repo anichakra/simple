@@ -17,6 +17,7 @@ import me.anichakra.poc.simple.rest.service.DataService;
 
 @RestController
 @RequestMapping("/asset")
+
 @Validated
 public class AssetDataController {
 
