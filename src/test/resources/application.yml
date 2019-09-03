@@ -1,0 +1,13 @@
+microservice:
+  packages: com.flagstar.servicing
+  
+test:
+  print-data: true
+  print-exception: true
+
+spring:
+  jackson:
+    date-format: yyyy-MM-dd
+    serialization:
+      indent-output: true
+    
