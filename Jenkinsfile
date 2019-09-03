@@ -6,7 +6,7 @@ pipeline {
                 docker { image 'maven:3-jdk-11' }
             }
             steps {
-                sh 'mvn --version'
+                sh 'mvn clean install'
             }
         }
     }

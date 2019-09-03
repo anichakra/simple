@@ -7,7 +7,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class Application {
 
     public static void main(String[] args) {
-        System.setProperty("node.id", String.valueOf(Math.random()).substring(2, 4));
+        System.setProperty(
+                "node.id", String.valueOf(Math.random()).substring(2, 4));
         SpringApplication.run(Application.class, args);
         
         
