@@ -1,16 +1,13 @@
 pipeline {
-    agent {
-        docker {
-            image 'maven:3-jdk-11'
-            args '-v $HOME/.m2:/root/.m2'
-        }
-    }
+    agent none
     stages {
-        stage('Build') {
+        stage('Back-end') {
+            agent {
+                docker { image 'maven:3-jdk-11' }
+            }
             steps {
-                sh 'mvn -B'
+                sh 'mvn --version'
             }
         }
     }
-       
 }
