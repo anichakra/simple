@@ -3,11 +3,15 @@ pipeline {
     
     options { disableConcurrentBuilds() }
     stages {
-        stage('Permissions') {
-            steps {
-                sh 'chmod 775 *'
-            }
-        }
+    
+       stage('SCM Checkout'){
+    // Clone repo
+	git branch: 'master', 
+	credentialsId: 'github', 
+	url: 'https://github.com/anichakra/simple'
+   
+   }
+    
         stage('Build') {
             steps {
                 sh '''
