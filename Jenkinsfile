@@ -4,13 +4,12 @@ pipeline {
     options { disableConcurrentBuilds() }
     stages {
     
-       stage('SCM Checkout'){
-    // Clone repo
-	git branch: 'master', 
-	credentialsId: 'github', 
-	url: 'https://github.com/anichakra/simple'
+       stage('SCM Checkout') {
+            // Clone repo
+	     git branch: 'master', 
+	     url: 'https://github.com/anichakra/simple'
    
-   }
+        }
     
         stage('Build') {
             steps {
