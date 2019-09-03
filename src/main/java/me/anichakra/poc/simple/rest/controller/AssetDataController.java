@@ -30,5 +30,4 @@ public class AssetDataController {
         return dataService.getAsset(account);
     }
 
- 
 }
