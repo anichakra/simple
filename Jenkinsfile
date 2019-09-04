@@ -15,7 +15,7 @@ node {
   }
   stage('Push to AWS ECR'){
     docker.withRegistry('https://595233065713.dkr.ecr.us-east-1.amazonaws.com', 'ecr:us-east-1:5fe9919d-8fe5-42eb-9c4c-e38d3a7c3dbb') {
-      docker.image('cloudnative-lab').push('simple-rest-service:0.0.1.BUILD-SNAPSHOT')
+      docker.image('cloudnative-lab/simple-rest-service').push('0.0.1.BUILD-SNAPSHOT')
     }    
   }
 }

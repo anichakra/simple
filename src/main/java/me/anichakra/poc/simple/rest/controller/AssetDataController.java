@@ -21,6 +21,8 @@ import me.anichakra.poc.simple.rest.service.DataService;
 @Validated
 public class AssetDataController {
 
+    
+    
     @Autowired
     private DataService dataService;
 
