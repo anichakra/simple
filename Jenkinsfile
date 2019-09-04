@@ -14,7 +14,7 @@ node {
     sh 'aws ecr get-login --region us-east-1 | xargs xargs'   
   }
   stage('Push to AWS ECR'){
-    docker.withRegistry('https://595233065713.dkr.ecr.us-east-1.amazonaws.com') {
+    docker.withRegistry('https://595233065713.dkr.ecr.us-east-1.amazonaws.com', 'ecr:us-east-1:ecr-cloudnative') {
       docker.image('cloudnative-lab/simple-rest-service:0.0.1.BUILD-SNAPSHOT').push()
     }    
   }
