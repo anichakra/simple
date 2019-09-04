@@ -22,11 +22,13 @@ public class AssetDataController {
     @Autowired
     private DataService dataService;
 
+    
+    
+    
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/{account}")
     @ResponseBody
     public List<AssetData> getAsset(@PathVariable("account") String account) {
         return dataService.getAsset(account);
     }
-
 }
