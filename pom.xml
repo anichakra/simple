@@ -100,7 +100,7 @@
 				<artifactId>docker-maven-plugin</artifactId>
 				<version>${spotify-version}</version>
 				<configuration>
-					<imageName>cloudnative-lab/${project.artifactId}:${project.version}</imageName>
+					<imageName>${project.artifactId}:${project.version}</imageName>
 					<baseImage>amazoncorretto:11.0.4</baseImage>
 					<entryPoint>["java", "-jar", "/${project.build.finalName}.jar"]</entryPoint>
 					<resources>
