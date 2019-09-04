@@ -10,5 +10,6 @@ public class Application {
         System.setProperty(
                 "node.id", String.valueOf(Math.random()).substring(2, 4));
         SpringApplication.run(Application.class, args);
+        
     }
 }

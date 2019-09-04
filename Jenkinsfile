@@ -26,8 +26,9 @@ pipeline {
             }
         }
         stage('Connect') {
+          steps {
               sh 'aws ecr get-login --region us-east-1 | xargs xargs'
- 
+          }
         }
         
         stage('Publish')
