@@ -22,9 +22,6 @@ public class AssetDataController {
     @Autowired
     private DataService dataService;
 
-    
-    
-    
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/{account}")
     @ResponseBody
