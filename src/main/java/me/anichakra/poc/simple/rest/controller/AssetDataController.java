@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import me.anichakra.poc.simple.rest.domain.AssetData;
 import me.anichakra.poc.simple.rest.service.DataService;
 
+
 @RestController
 @RequestMapping("/asset")
 @Validated
@@ -22,8 +23,6 @@ public class AssetDataController {
     @Autowired
     private DataService dataService;
 
-    
-    
     
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/{account}")
