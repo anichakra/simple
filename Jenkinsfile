@@ -54,15 +54,25 @@ node {
   // stop the container
   // remove container
   
+     // stage('Connect to AWS ECR') {
+       // sh 'aws ecr get-login --region us-east-1 | xargs xargs'   
+     // }
+  
       stage('Push Image to AWS ECR'){
         docker.withRegistry(ecrUrl, ecrToken) {
           docker.image(imageTag).push()
         }    
       }
       
-      stage("Permission") {
-        sh  "chmod 777 deploy.sh"
+      stage("CLI") {
+        def testImage = docker.build("aws-cli-image")   
+       
+        docker.image(mavenImage).inside("-v $HOME/.aws:/root/.aws") {
+          sh 'aws ecs update-service --cluster cloudnativelab-ecs-cluster --service simple-rest-service --force-new-deployment'                                                                                 
+        }
+
       }
+      
       
       stage("Deploy to AWS ECS") {
         sh "./deploy.sh"

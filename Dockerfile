@@ -1,19 +1,10 @@
-FROM amazoncorretto:11.0.4 as runtime
+FROM python:alpine
 
-EXPOSE 8080
-#Set app home folder
-ENV APP_HOME /app
-#Possibility to set JVM options (https://www.oracle.com/technetwork/java/javase/tech/vmoptions-jsp-140102.html)
-ENV JAVA_OPTS=""
-#Create base app folder
-RUN mkdir $APP_HOME
-#Create folder to save configuration files
-RUN mkdir $APP_HOME/config
-#Create folder with application logs
-RUN mkdir $APP_HOME/log
-VOLUME $APP_HOME/log
-VOLUME $APP_HOME/config
-WORKDIR $APP_HOME
-#Copy executable jar file from the builder image
-COPY --from=builder /build/target/*.jar app.jar
-ENTRYPOINT [ "sh", "-c", "java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -jar app.jar" ]
+ARG CLI_VERSION=1.16.241
+
+RUN apk -uv add --no-cache groff jq less && \
+    pip install --no-cache-dir awscli==$CLI_VERSION
+
+WORKDIR /aws
+
+CMD sh
