@@ -77,7 +77,7 @@ node {
         def currTaskDef = sh (
           returnStdout: true,
           script:  "                                                              \
-            aws ecs describe-task-definition  --task-definition ${taskFamily}     \
+            aws ecs describe-task-definition --task-definition ${taskFamily}      \
                                               | egrep 'revision'                  \
                                               | tr ',' ' '                        \
                                               | awk '{print \$2}'                 \
@@ -87,9 +87,9 @@ node {
         def currentTask = sh (
           returnStdout: true,
           script:  "                                                              \
-            aws ecs list-tasks  --cluster ${clusterName}                          \
-                                --family ${taskFamily}                            \
-                                --output text                                     \
+            aws ecs list-tasks --cluster ${clusterName}                           \
+                               --family ${taskFamily}                             \
+                               --output text                                      \
                                 | egrep 'TASKARNS'                                \
                                 | awk '{print \$2}'                               \
           "
