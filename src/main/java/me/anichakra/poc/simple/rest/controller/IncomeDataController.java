@@ -18,6 +18,7 @@ import me.anichakra.poc.simple.rest.service.DataService;
 @Validated
 public class IncomeDataController {
 	
+    
 	@Autowired
 	private DataService dataService;
 
