@@ -1,10 +1,7 @@
 node {
   ws("workspace/${env.JOB_NAME}/${env.BRANCH_NAME}") {
     try {
-      // Notify slack, new build started!
-      stage("BUILD STARTED") {
-        slackSend (color: '#FFFF00', message: "STARTED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
-      }
+      
       def mavenImage    = "maven:3-jdk-11"
       def m2Volume      = "-v $HOME/.m2:/root/.m2"
       def imageTag      = "simple-rest-service:0.0.1.BUILD-SNAPSHOT"
@@ -149,15 +146,11 @@ node {
         "
       }
 
-      stage("BUILD SUCCEED") {
-        slackSend (color: '#00FF00', message: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
-      }
-  
+     
   // remove the image
   // run ECS to get new image (canary release - rolling update)
   // run microservice automation script
     } catch(e) {
-      slackSend (color: '#FF0000', message: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
       throw e
     }
   }
