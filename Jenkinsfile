@@ -11,18 +11,27 @@ node {
       def serviceName   = "simple-rest-service"
       def taskFamily    = "simple-rest-service-task"
       def clusterName   = "cloudnativelab-ecs-cluster"
-
+      stage('Deploy') {
+            steps {
+                // Example AWS credentials
+                withCredentials(
+                [[
+                    $class: 'AmazonWebServicesCredentialsBinding',
+                    accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                    credentialsId: 'aws-dev-credentials',  // ID of credentials in Jenkins
+                    secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+                ]]) {
+                    echo "Listing contents of an S3 bucket."
+                    sh "AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
+                        AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
+                        AWS_REGION=us-east-1 \
+                        aws aws s3 ls"
+                }
+            }
+        }
  
       
-      stage("CLI") {
-       // def testImage = docker.build("aws-cli-image")   
-       
-        docker.image("mikesir87/aws-cli").inside("-v $HOME/.aws:/root/.aws") {
-          //sh 'aws ecs update-service --cluster cloudnativelab-ecs-cluster --service simple-rest-service --task-definition simple-rest-service-task:2 --force-new-deployment --region us-east-1'                                                                               
-          sh 'aws s3 ls' 
-        }
-
-      }
+    
       
      
   // remove the image
