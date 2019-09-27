@@ -151,6 +151,7 @@ node {
   // run ECS to get new image (canary release - rolling update)
   // run microservice automation script
     } catch(e) {
+      echo 'Err: Incremental Build failed with Error: ' + e.toString()
       throw e
     }
   }
