@@ -60,9 +60,12 @@ node {
         }    
       }
       
+      stage("Permission") {
+        sh  "chmod 777 deploy.sh"
+      }
+      
       stage("Deploy to AWS ECS") {
-        sh 'chmod 777 deploy.sh'
-        sh './deploy.sh'
+        sh "./deploy.sh"
       }
 
      
