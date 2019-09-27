@@ -29,7 +29,6 @@ public class DataService {
 
 	public PropertyData getProperty(String account) {
 		return new PropertyData(account, "our property for loan account " + account, System.currentTimeMillis());
-
 	}
 
 }
