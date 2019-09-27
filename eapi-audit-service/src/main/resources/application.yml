@@ -1,5 +1,0 @@
-custom:
-  context-path: /v@project.version@
-  application-name: auditservice
-version:
-  enable: false
