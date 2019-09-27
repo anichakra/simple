@@ -54,10 +54,6 @@ node {
   // stop the container
   // remove container
   
-      stage('Connect to AWS ECR') {
-        sh 'aws ecr get-login --region us-east-1 | xargs xargs'   
-      }
-  
       stage('Push Image to AWS ECR'){
         docker.withRegistry(ecrUrl, ecrToken) {
           docker.image(imageTag).push()
