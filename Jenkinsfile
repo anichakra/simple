@@ -65,7 +65,7 @@ node {
       }
       
       stage("Deploy to AWS ECS") {
-        sh 'aws ecs update-service --cluster cloudnativelab-ecs-cluster --service simple-rest-service --task-definition simple-rest-service-task:2 --desired-count 2'
+        sh 'aws ecs update-service --cluster cloudnativelab-ecs-cluster --service simple-rest-service --force-new-deployment'
       }
 
      
