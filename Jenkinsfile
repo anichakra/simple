@@ -67,7 +67,7 @@ node {
       stage("CLI") {
         def testImage = docker.build("aws-cli-image")   
        
-        docker.image(mavenImage).inside("-v $HOME/.aws:/root/.aws") {
+        docker.image(testImage).inside("-v $HOME/.aws:/root/.aws") {
           sh 'aws ecs update-service --cluster cloudnativelab-ecs-cluster --service simple-rest-service --force-new-deployment'                                                                                 
         }
 
