@@ -1,0 +1,11 @@
+server:
+  port: ${PORT:8186}
+  connection-timeout: 5000
+spring:
+  application:
+    name: audit-service
+  cloud:
+    config:
+      uri: http://localhost:8888
+      username: eapi_root
+      password: eapi_admin@123
