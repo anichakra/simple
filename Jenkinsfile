@@ -68,9 +68,8 @@ node {
         def testImage = docker.build("aws-cli-image")   
        
         testImage.inside("-v $HOME/.aws:/root/.aws") {
-          sh 'aws ecs update-service --cluster cloudnativelab-ecs-cluster --service simple-rest-service --force-new-deployment --region us-east-1'                                                                               
+          sh 'aws ecs update-service --cluster cloudnativelab-ecs-cluster --service simple-rest-service --force-new-deployment'                                                                               
         }
-
       }
       
       
