@@ -59,7 +59,7 @@ node {
         docker.image("mikesir87/aws-cli").inside("-v $HOME/.aws:/root/.aws") {
           //sh 'aws ecs update-service --cluster cloudnativelab-ecs-cluster --service simple-rest-service --task-definition simple-rest-service-task:2 --force-new-deployment --region us-east-1'                                                                               
          // sh 'aws s3 ls' 
-        
+                
                 // Example AWS credentials
                 withCredentials(
                 [[
@@ -68,13 +68,28 @@ node {
                     credentialsId: 'aws_id',  // ID of credentials in Jenkins
                     secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
                 ]]) {
+                
                     echo "deploying"
-                    
+                    def currentTask = sh (
+          returnStdout: true,
+          script:  "                                                             \
+            AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
+                        AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
+                        AWS_REGION=us-east-1 \
+            aws ecs list-tasks  --cluster ${clusterName}                          \
+                                --family ${taskDefName}  --region us-east-1                          \
+                                --output text                                     \
+                                | egrep 'TASKARNS'                                \
+                                | awk '{print \$2}'                               \
+          "
+        ).trim()
                       sh "AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
                         AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
                         AWS_REGION=us-east-1 \
                         aws ecs update-service --cluster ${clusterName} --service ${serviceName} --task-definition ${taskDefName}:${tasks} --desired-count 0  --region us-east-1"
-                    
+                     if (currentTask) {
+          sh "aws ecs stop-task --cluster ${clusterName} --task ${currentTask} --region us-east-1"
+        }         
                     sh "AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
                         AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
                         AWS_REGION=us-east-1 \
