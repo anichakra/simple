@@ -73,9 +73,6 @@ node {
                     def currentTask = sh (
           returnStdout: true,
           script:  "                                                             \
-            AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
-                        AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
-                        AWS_REGION=us-east-1 \
             aws ecs list-tasks  --cluster ${clusterName}                          \
                                 --family ${taskDefName}  --region us-east-1                          \
                                 --output text                                     \
@@ -83,20 +80,11 @@ node {
                                 | awk '{print \$2}'                               \
           "
         ).trim()
-                      sh "AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
-                        AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
-                        AWS_REGION=us-east-1 \
-                        aws ecs update-service --cluster ${clusterName} --service ${serviceName} --task-definition ${taskDefName}:${tasks} --desired-count 0  --region us-east-1"
+                      sh "aws ecs update-service --cluster ${clusterName} --service ${serviceName} --task-definition ${taskDefName}:${tasks} --desired-count 0  --region us-east-1"
                      if (currentTask) {
-          sh "AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
-                        AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
-                        AWS_REGION=us-east-1 \
-          aws ecs stop-task --cluster ${clusterName} --task ${currentTask} --region us-east-1"
+          sh "aws ecs stop-task --cluster ${clusterName} --task ${currentTask} --region us-east-1"
         }         
-                    sh "AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
-                        AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
-                        AWS_REGION=us-east-1 \
-                        aws ecs update-service --cluster ${clusterName} --service ${serviceName} --task-definition ${taskDefName}:${tasks} --desired-count 2 --region us-east-1"
+                    sh "aws ecs update-service --cluster ${clusterName} --service ${serviceName} --task-definition ${taskDefName}:${tasks} --desired-count 2 --region us-east-1"
                 }
             
         }
