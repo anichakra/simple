@@ -82,14 +82,13 @@ node {
         ).trim()
                 echo "Current task is: ${currentTask}"
 
-                      sh "aws ecs update-service --cluster ${clusterName} --service ${serviceName} --task-definition ${taskDefName}:${revision} --desired-count 0  --region us-east-1"
+                     // sh "aws ecs update-service --cluster ${clusterName} --service ${serviceName} --task-definition ${taskDefName}:${revision} --desired-count 0  --region us-east-1"
                      try {
                          
                      
 
                      if (currentTask) {
-                                     echo "inside if block: ${currentTask}"
-                     
+               
           sh "aws ecs stop-task --region us-east-1 --cluster ${clusterName} --task ${currentTask}"
         }         
         } catch (ee) {
