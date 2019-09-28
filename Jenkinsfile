@@ -10,7 +10,7 @@ node {
       def taskDefile    = "file://task-definition-${imageTag}.json"
       def serviceName   = "simple-rest-service"
       def taskDefName   = "simple-rest-service-task"
-      def revisision       = 2
+      def revision       = 2
       def clusterName   = "cloudnativelab-ecs-cluster"
       
       stage('SCM') {
