@@ -94,7 +94,6 @@ node {
                           echo 'Task cannot be stopped: ' + ee.toString()
                     
                 }
-
                     sh "aws ecs update-service --cluster ${clusterName} --service ${serviceName} --task-definition ${taskDefName}:${tasks} --desired-count 4 --region us-east-1"
                 }
             
