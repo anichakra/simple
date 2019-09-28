@@ -15,16 +15,10 @@ node {
       stage('SCM') {
         checkout scm
       }
-      stage('Maven Clean') {
-        mavenImage.inside(m2Volume) {
-          sh 'mvn clean'
-        }
-      }
-  
-   
+
       stage('Unit Test') {
         mavenImage.inside(m2Volume) {
-          sh 'mvn test'
+          sh 'mvn clean test'
         }
       }
   
