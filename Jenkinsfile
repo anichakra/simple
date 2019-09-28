@@ -83,9 +83,18 @@ node {
                 echo "Current task is: ${currentTask}"
 
                       sh "aws ecs update-service --cluster ${clusterName} --service ${serviceName} --task-definition ${taskDefName}:${tasks} --desired-count 0  --region us-east-1"
+                     try {
+                         
+                     
+
                      if (currentTask) {
           sh "aws ecs stop-task --region us-east-1 --cluster ${clusterName} --task ${currentTask}"
         }         
+        } catch (ee) {
+                          echo 'Err: Incremental Build failed with Error: ' + ee.toString()
+                    
+                }
+
                     sh "aws ecs update-service --cluster ${clusterName} --service ${serviceName} --task-definition ${taskDefName}:${tasks} --desired-count 4 --region us-east-1"
                 }
             
