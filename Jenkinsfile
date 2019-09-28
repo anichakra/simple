@@ -88,7 +88,10 @@ node {
                         AWS_REGION=us-east-1 \
                         aws ecs update-service --cluster ${clusterName} --service ${serviceName} --task-definition ${taskDefName}:${tasks} --desired-count 0  --region us-east-1"
                      if (currentTask) {
-          sh "aws ecs stop-task --cluster ${clusterName} --task ${currentTask} --region us-east-1"
+          sh "AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
+                        AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
+                        AWS_REGION=us-east-1 \
+          aws ecs stop-task --cluster ${clusterName} --task ${currentTask} --region us-east-1"
         }         
                     sh "AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
                         AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
