@@ -84,7 +84,7 @@ node {
                      if (currentTask) {
           sh "aws ecs stop-task --cluster ${clusterName} --task ${currentTask} --region us-east-1"
         }         
-                    sh "aws ecs update-service --cluster ${clusterName} --service ${serviceName} --task-definition ${taskDefName}:${tasks} --desired-count 2 --region us-east-1"
+                    sh "aws ecs update-service --cluster ${clusterName} --service ${serviceName} --task-definition ${taskDefName}:${tasks} --desired-count 4 --region us-east-1"
                 }
             
         }

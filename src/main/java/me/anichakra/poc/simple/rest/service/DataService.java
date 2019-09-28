@@ -16,9 +16,10 @@ public class DataService {
 
 	public List<AssetData> getAsset(String account) {
 		List<AssetData> assetDataList = new ArrayList<AssetData>();
-		assetDataList.add(new AssetData(account, "asset1" + account, System.currentTimeMillis()));
-		assetDataList.add(new AssetData(account, "asset2" + account, System.currentTimeMillis()));
-		assetDataList.add(new AssetData(account, "asset3" + account, System.currentTimeMillis()));
+		String node = System.getProperty("node.id") ;
+		assetDataList.add(new AssetData(account, "asset1_" + node + account, System.currentTimeMillis()));
+		assetDataList.add(new AssetData(account, "asset2_" + node + account, System.currentTimeMillis()));
+		assetDataList.add(new AssetData(account, "asset3_" + node + account, System.currentTimeMillis()));
 		return assetDataList;
 	}
 
