@@ -9,7 +9,8 @@ node {
       def ecrToken      = "ecr:us-east-1:5fe9919d-8fe5-42eb-9c4c-e38d3a7c3dbb"
       def taskDefile    = "file://task-definition-${imageTag}.json"
       def serviceName   = "simple-rest-service"
-      def taskFamily    = "simple-rest-service-task"
+      def taskDefName   = "simple-rest-service-task"
+      def tasks         = 2
       def clusterName   = "cloudnativelab-ecs-cluster"
       
       stage('SCM') {
@@ -67,11 +68,17 @@ node {
                     credentialsId: 'aws_id',  // ID of credentials in Jenkins
                     secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
                 ]]) {
-                    echo "Listing contents of an S3 bucket."
+                    echo "deploying"
+                    
                     sh "AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
                         AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
                         AWS_REGION=us-east-1 \
-                        aws ecs update-service --cluster cloudnativelab-ecs-cluster --service simple-rest-service --task-definition simple-rest-service-task:2 --region us-east-1"
+                        aws ecs update-service --cluster ${clusterName} --service ${serviceName} --task-definition ${taskDefName}:0"
+                    
+                    sh "AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
+                        AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
+                        AWS_REGION=us-east-1 \
+                        aws ecs update-service --cluster ${clusterName} --service ${serviceName} --task-definition ${taskDefName}:${tasks}"
                 }
             
         }
