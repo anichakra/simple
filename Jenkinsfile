@@ -58,49 +58,48 @@ node {
       stage('Build') {
         docker.image("mikesir87/aws-cli").inside("-v $HOME/.aws:/root/.aws") {
           //sh 'aws ecs update-service --cluster cloudnativelab-ecs-cluster --service simple-rest-service --task-definition simple-rest-service-task:2 --force-new-deployment --region us-east-1'                                                                               
-         // sh 'aws s3 ls' 
+          // sh 'aws s3 ls' 
                 
-                // Example AWS credentials
-                withCredentials(
-                [[
-                    $class: 'AmazonWebServicesCredentialsBinding',
-                    accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-                    credentialsId: 'aws_id',  // ID of credentials in Jenkins
-                    secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
-                ]]) {
+          // Example AWS credentials
+          withCredentials(
+            [[
+              $class: 'AmazonWebServicesCredentialsBinding',
+              accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+              credentialsId: 'aws_id',  // ID of credentials in Jenkins
+              secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+            ]]) {
                 
-                    echo "deploying"
-                    def currentTask = sh (
-          returnStdout: true,
-          script:  "                                                             \
-            aws ecs list-tasks  --cluster ${clusterName}                          \
-                                --family ${taskDefName}  --region us-east-1                          \
-                                --output text                                     \
-                                | egrep 'TASKARNS'                                \
-                                | awk '{print \$2}'                               \
+          echo "deploying"
+          def currentTask = sh (
+            returnStdout: true,
+            script:  "                                                             \
+              aws ecs list-tasks  --cluster ${clusterName}                         \
+                                  --family ${taskDefName}  --region us-east-1      \
+                                  --output text                                    \
+                                  | egrep 'TASKARNS'                               \
+                                  | awk '{print \$2}'                              \
           "
         ).trim()
-                echo "Current task is: ${currentTask}"
+            echo "Current task is: ${currentTask}"
 
-                      sh "aws ecs update-service --cluster ${clusterName} --service ${serviceName} --task-definition ${taskDefName}:${revision} --desired-count 0  --region us-east-1"
-                     try {
-                         
-                     
-
-                     if (currentTask) {
-                       println currentTask.split()
-               
-          sh "aws ecs stop-task --region us-east-1 --cluster ${clusterName} --task ${currentTask}"
-        }         
-        } catch (ee) {
-                          echo 'Task cannot be stopped: ' + ee.toString()
-                    
+            sh "aws ecs update-service --cluster ${clusterName} --service ${serviceName} --task-definition ${taskDefName}:${revision} --desired-count 0  --region us-east-1"
+            try {
+              if (currentTask) {
+                def splitted = currentTask.split('\n')
+                for(i=0; i<splitted.length; i++ ){
+                  def task = splitted[ i ]        
+                  println task         
+                  sh "aws ecs stop-task --region us-east-1 --cluster ${clusterName} --task ${task}"
                 }
-                    sh "aws ecs update-service --cluster ${clusterName} --service ${serviceName} --task-definition ${taskDefName}:${revision} --desired-count 4 --region us-east-1"
-                }
-            
+              }
+                       
+            } catch (ee) {
+              echo 'Task cannot be stopped: ' + ee.toString()
+            }
+            sh "aws ecs update-service --cluster ${clusterName} --service ${serviceName} --task-definition ${taskDefName}:${revision} --desired-count 4 --region us-east-1"
+          }
         }
-     }      
+      }      
      
   // remove the image
   // run ECS to get new image (canary release - rolling update)
