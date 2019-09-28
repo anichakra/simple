@@ -11,4 +11,6 @@ public class PropertyData {
 	private String propertyDetails;
 	private Long time;
 
+	
+	
 }
