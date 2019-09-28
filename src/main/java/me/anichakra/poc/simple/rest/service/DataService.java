@@ -16,9 +16,9 @@ public class DataService {
 
 	public List<AssetData> getAsset(String account) {
 		List<AssetData> assetDataList = new ArrayList<AssetData>();
-		assetDataList.add(new AssetData(account, "asset1 for loan account " + account, System.currentTimeMillis()));
-		assetDataList.add(new AssetData(account, "asset2 for loan account " + account, System.currentTimeMillis()));
-		assetDataList.add(new AssetData(account, "asset3 for loan account " + account, System.currentTimeMillis()));
+		assetDataList.add(new AssetData(account, "asset1 " + account, System.currentTimeMillis()));
+		assetDataList.add(new AssetData(account, "asset2 " + account, System.currentTimeMillis()));
+		assetDataList.add(new AssetData(account, "asset3 " + account, System.currentTimeMillis()));
 		return assetDataList;
 	}
 
