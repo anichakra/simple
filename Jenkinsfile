@@ -91,7 +91,7 @@ node {
           sh "aws ecs stop-task --region us-east-1 --cluster ${clusterName} --task ${currentTask}"
         }         
         } catch (ee) {
-                          echo 'Err: Incremental Build failed with Error: ' + ee.toString()
+                          echo 'Task cannot be stopped: ' + ee.toString()
                     
                 }
 
