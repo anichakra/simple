@@ -10,7 +10,7 @@ node {
       def taskDefile    = "file://task-definition-${imageTag}.json"
       def serviceName   = "simple-rest-service"
       def taskDefName   = "simple-rest-service-task"
-      def tasks         = 2
+      def revisi        = 2
       def clusterName   = "cloudnativelab-ecs-cluster"
       
       stage('SCM') {
@@ -82,19 +82,21 @@ node {
         ).trim()
                 echo "Current task is: ${currentTask}"
 
-                      sh "aws ecs update-service --cluster ${clusterName} --service ${serviceName} --task-definition ${taskDefName}:${tasks} --desired-count 0  --region us-east-1"
+                      sh "aws ecs update-service --cluster ${clusterName} --service ${serviceName} --task-definition ${taskDefName}:${revision} --desired-count 0  --region us-east-1"
                      try {
                          
                      
 
                      if (currentTask) {
+                                     echo "inside if block: ${currentTask}"
+                     
           sh "aws ecs stop-task --region us-east-1 --cluster ${clusterName} --task ${currentTask}"
         }         
         } catch (ee) {
                           echo 'Task cannot be stopped: ' + ee.toString()
                     
                 }
-                    sh "aws ecs update-service --cluster ${clusterName} --service ${serviceName} --task-definition ${taskDefName}:${tasks} --desired-count 4 --region us-east-1"
+                    sh "aws ecs update-service --cluster ${clusterName} --service ${serviceName} --task-definition ${taskDefName}:${revision} --desired-count 4 --region us-east-1"
                 }
             
         }
