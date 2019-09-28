@@ -82,7 +82,7 @@ node {
         ).trim()
                       sh "aws ecs update-service --cluster ${clusterName} --service ${serviceName} --task-definition ${taskDefName}:${tasks} --desired-count 0  --region us-east-1"
                      if (currentTask) {
-          sh "aws ecs stop-task --cluster ${clusterName} --task ${currentTask} --region us-east-1"
+          sh "aws ecs stop-task --region us-east-1 --cluster ${clusterName} --task ${currentTask}"
         }         
                     sh "aws ecs update-service --cluster ${clusterName} --service ${serviceName} --task-definition ${taskDefName}:${tasks} --desired-count 4 --region us-east-1"
                 }
