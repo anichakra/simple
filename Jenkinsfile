@@ -29,7 +29,7 @@ node {
                     sh "AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
                         AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
                         AWS_REGION=us-east-1 \
-                        aws s3 ls"
+                        aws ecs update-service --cluster cloudnativelab-ecs-cluster --service simple-rest-service --task-definition simple-rest-service-task:2 --force-new-deployment --region us-east-1"
                 }
             
         }
@@ -40,10 +40,10 @@ node {
        
    //     docker.image("mikesir87/aws-cli").inside("-v $HOME/.aws:/root/.aws") {
           //sh 'aws ecs update-service --cluster cloudnativelab-ecs-cluster --service simple-rest-service --task-definition simple-rest-service-task:2 --force-new-deployment --region us-east-1'                                                                               
-   ///       sh 'aws s3 ls' 
-   //     }
-
-   //   }
+   //       sh 'aws s3 ls' 
+  //      }
+//
+    //  }
       
      
   // remove the image
