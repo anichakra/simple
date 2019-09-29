@@ -78,10 +78,10 @@ node {
         docker.image(ARTIFACT_ID + ":" + VERSION).runWith('-p 8085:8080') { c ->
           sh "docker logs ${c.id}"
           docker.image(ARTIFACT_ID + ":" + VERSION).inside("--link ${c.id}:db") {
-            sh 'while ! curl localhost:8085/actuator/health; do sleep 1; done'
+            sh('while ! curl localhost:8085/actuator/health; do sleep 1; done')
           }
           docker.image('centos:7').inside("--link ${c.id}:db") {
-            sh 'curl localhost:8085/actuator/health'
+            sh ('curl localhost:8085/actuator/health')
           }
         }
       }
