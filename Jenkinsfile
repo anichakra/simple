@@ -30,12 +30,12 @@ node {
       def AWS_CLI_VOLUME = "-v $HOME/.aws:/root/.aws"
 
       stage('SCM Checkout') {
-        println "Checking out latest from git repo"
+        println "########## Checking out latest from git repo ##########"
         checkout scm
       }
 
       stage('Unit Testing') {
-        println "Executing unit test cases"
+        println "########## Executing unit test cases ##########"
         docker.image(MAVEN_IMAGE).inside(MAVEN_VOLUME) {
           sh 'mvn clean test'
         }
@@ -44,7 +44,7 @@ node {
   // Push reports to sonar
     
      stage('JAR Install') {
-        println "Installing jar files in local maven repository"
+        println "########## Installing jar files in local maven repository ##########"
         docker.image(MAVEN_IMAGE).inside(MAVEN_VOLUME) {
           sh 'mvn install'
         }
@@ -53,14 +53,14 @@ node {
       // Push jars to nexus
   
       stage('Docker Image Creation') {
-        println "Creating docker images"
+        println "########## Creating docker images ##########"
         docker.image(MAVEN_IMAGE).inside(MAVEN_VOLUME) {
           sh 'mvn docker:build'    
         }
       }
  
       stage('Docker Image Push'){
-        println "Pushing docker images in ECR repository"
+        println "########## Pushing docker images in ECR repository ##########"
         docker.withRegistry("https://" + AWS_ACCOUNT + ".dkr.ecr." + AWS_REGION + ".amazonaws.com", 
         "ecr:" + AWS_REGION + ":" + AWS_ECR_TOKEN) {
           docker.image(ARTIFACT_ID+":"+VERSION).push()
@@ -68,7 +68,7 @@ node {
       }      
  
       stage('ECS Deploy') {
-        println "Deploying services to ECS"
+        println "########## Deploying services to ECS ##########"
         docker.image(AWS_CLI_IMAGE).inside(AWS_CLI_VOLUME) {
           withCredentials(
             [[
@@ -89,7 +89,8 @@ node {
                                   | awk '{print \$2}'               \
           "
         ).trim()
-            println "Stopping all the current tasks: " + currentTasks
+            println "Stopping all the current tasks: " 
+            println currentTasks
 
             sh "aws ecs update-service --cluster ${AWS_ECS_CLUSTER_NAME}                                  \
                                        --service ${AWS_ECS_SERVICE_NAME}                                  \
@@ -102,7 +103,7 @@ node {
               for(i=0; i<taskArray.length; i++ ) {
                 try {
                   def task = taskArray[ i ]        
-                  println "Stopping Task" + task
+                  println "Stopping Task: " + task
                   sh "aws ecs stop-task --region ${AWS_REGION}              \
                                         --cluster ${AWS_ECS_CLUSTER_NAME}   \
                                         --task ${task}"
@@ -113,8 +114,8 @@ node {
               }
             }
             
-            println "Updating ECS cluster: " + AWS_ECS_CLUSTER_NAME \
-            + " for service: " + AWS_ECS_SERVICE_NAME               \
+            println "Updating ECS cluster: " + AWS_ECS_CLUSTER_NAME                 \
+            + " for service: " + AWS_ECS_SERVICE_NAME                               \
             + " with tasks: " +  AWS_ECS_TASK_DEF_NAME + ":" + AWS_ECS_TASK_DEF_REV \
             + "with desired-count: " + AWS_ECS_TASK_COUNT
             
