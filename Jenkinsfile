@@ -1,3 +1,6 @@
+#!groovy
+//@author Anirban Chakraborty
+
 node {
   ws("workspace/${env.JOB_NAME}/${env.BRANCH_NAME}") {
     try {
@@ -29,6 +32,8 @@ node {
       def MAVEN_VOLUME     = "-v $HOME/.m2:/root/.m2"
       def AWS_CLI_VOLUME = "-v $HOME/.aws:/root/.aws"
 
+      println "Pipeline started in workspace/" + env.JOB_NAME + env.BRANCH_NAME
+      
       stage('SCM Checkout') {
         println "########## Checking out latest from git repo ##########"
         checkout scm
@@ -127,13 +132,18 @@ node {
           }
         }
       }      
-     
-  // remove the image
   // run ECS to get new image (canary release - rolling update)
   // run microservice automation script
-    } catch(e) {
+   } catch(e) {
       println "Err: Incremental Build failed with Error: " + e.toString()
+      currentBuild.result = 'FAILED'
+      notifyFailed()
       throw e
+    } finally  {
+      stage('Cleanup') {
+        sh("docker image rm " + ARTIFACT_ID + ":" + VERSION)
+        deleteDir()
+      }          
     }
   }
 }
