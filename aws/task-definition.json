@@ -12,8 +12,7 @@
                     "protocol": "tcp"
                 }
             ], 
-            "essential": true, 
-          
+            "essential": true
         }
     ], 
     "requiresCompatibilities": [
