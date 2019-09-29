@@ -10,22 +10,25 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 @RestController
 @RequestMapping("/node")
 @Validated
 public class NodeController {
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping
+    @GetMapping("/node")
     @ResponseBody
     public String getNodeId() {
         return System.getProperty("node.id");
     }
     
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping
+    @GetMapping("/localAddress")
     @ResponseBody
-    public String getLocalAddress(HttpServletRequest request) {
+    public String getLocalAddress() {
+        HttpServletRequest request = ((ServletRequestAttributes)    RequestContextHolder.getRequestAttributes()).getRequest();
+
        return request.getLocalAddr();
     }
 
@@ -44,9 +47,10 @@ public class NodeController {
 
 
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping
+    @GetMapping("/remoteAddress")
     @ResponseBody
-    public String getRemoteAddress(HttpServletRequest request) {
+    public String getRemoteAddress() {
+        HttpServletRequest request = ((ServletRequestAttributes)    RequestContextHolder.getRequestAttributes()).getRequest();
         for (String header : IP_HEADER_CANDIDATES) {
             String ipList = request.getHeader(header);
             if (ipList != null && ipList.length() != 0 && !"unknown".equalsIgnoreCase(ipList)) {
