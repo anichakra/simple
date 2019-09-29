@@ -29,7 +29,7 @@ node {
       
       // Docker image details - might not be required to be changed often    
       def MAVEN_IMAGE   = "maven:3-jdk-11"
-      def AWS_CLI_IMAGE  = "mikesir87/aws-cli"
+      def AWS_CLI_IMAGE  = "atlassian/pipelines-awscli"
       def MAVEN_VOLUME     = "-v $HOME/.m2:/root/.m2"
       def AWS_CLI_VOLUME = "-v $HOME/.aws:/root/.aws"
 
