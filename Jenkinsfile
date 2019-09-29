@@ -101,12 +101,12 @@ node {
             
             println "No. of Task to stop: " + taskArray.length
             println "Stopping all the current tasks: " 
-         //   sh ("aws ecs update-service --cluster "         + AWS_ECS_CLUSTER_NAME  \
-         //                           + " --service "         + AWS_ECS_SERVICE_NAME  \
-           //                         + " --task-definition " + AWS_ECS_TASK_DEF_NAME \
-             //                       + ":"                   + AWS_ECS_TASK_DEF_REV  \
-               //                     + " --desired-count 0"                          \
-                 //                   + " --region "          + AWS_REGION)          
+            sh ("aws ecs update-service --cluster "         + AWS_ECS_CLUSTER_NAME  \
+                                    + " --service "         + AWS_ECS_SERVICE_NAME  \
+                                    + " --task-definition " + AWS_ECS_TASK_DEF_NAME \
+                                    + ":"                   + AWS_ECS_TASK_DEF_REV  \
+                                    + " --desired-count 0"                          \
+                                    + " --region "          + AWS_REGION)          
             
             while(currentTasks) {
               println "Iteration no.:" + count--

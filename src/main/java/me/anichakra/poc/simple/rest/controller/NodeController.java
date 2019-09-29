@@ -4,7 +4,6 @@ import java.net.UnknownHostException;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,21 +12,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import me.anichakra.poc.simple.rest.CloudConfiguration;
-
 @RestController
 @RequestMapping("/node")
 @Validated
 public class NodeController {
-    @Autowired
-    private CloudConfiguration config;
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/info")
     @ResponseBody
     public String getNodeId(HttpServletRequest request) throws UnknownHostException {
-        return System.getProperty("node.id") + ";local: " + getAddress(request) + ";remote: " + getRemote(request)
-                + ";cloud-config" + config;
+        return System.getProperty("node.id") + ";local: " + getAddress(request) + ";remote: " + getRemote(request);
     }
 
     public String getAddress(HttpServletRequest request) throws UnknownHostException {
