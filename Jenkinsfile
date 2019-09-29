@@ -20,7 +20,7 @@ node {
       def AWS_CREDENTIAL_ID = "aws_id"  
       
       // AWS attributes - might not be required to be changed often   
-      def AWS_REGION  = "${AWS_REGION}"
+      def AWS_REGION  = "us-east-1"
       def AWS_ACCOUNT = "595233065713" 
       
       // Docker image details - might not be required to be changed often    
