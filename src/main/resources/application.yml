@@ -1,2 +1,15 @@
 server:
   port: ${PORT:8080}
+
+# The AWS Configurations
+cloud:
+  aws:
+    credentials: 
+      accessKey: 
+      secretKey: 
+      instanceProfile: true
+      useDefaultAwsCredentialsChain: false
+    region:
+      auto: true
+      static: us-east-1
+

@@ -117,6 +117,8 @@ node {
                 }
               }
               currentTasks = sh(returnStdout: true, script: taskListCmd).trim()
+              println "Current Tasks: " + currentTasks  
+              
               if (currentTasks) {
                 t = currentTasks.split("\n") 
                 taskArray = t as String[]
