@@ -94,7 +94,7 @@ node {
             if (currentTasks) {
 
             def t = currentTasks.split("\n") 
-            def taskArray = t as String[]
+            String[] taskArray = t as String[]
             println "Tasks Array: " + taskArray  
             
             def count = 100 // just a number for waiting
