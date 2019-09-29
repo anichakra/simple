@@ -84,8 +84,6 @@ node {
             sh 'curl localhost:8085/actuator/health'
           }
         }
-      
-            
       }
       
       stage('ECS Deploy') {
