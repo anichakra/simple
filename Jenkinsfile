@@ -29,7 +29,6 @@ node {
       def AWS_CLI_IMAGE  = "mikesir87/aws-cli"
       def MAVEN_VOLUME     = "-v $HOME/.m2:/root/.m2"
       def AWS_CLI_VOLUME = "-v $HOME/.aws:/root/.aws"
-      def awsCli = docker.build("aws-cli", "./aws")
       
       println "Pipeline started in workspace/" + env.JOB_NAME + "/" + env.BRANCH_NAME
       
@@ -72,8 +71,8 @@ node {
       }      
  
       stage('ECS Deploy') {
-          
         println "########## Deploying services to ECS ##########"
+        def awsCli = docker.build("aws-cli", "./aws")
         awsCli.inside(AWS_CLI_VOLUME) {
           withCredentials(
             [[
