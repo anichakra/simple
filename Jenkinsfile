@@ -61,8 +61,9 @@ node {
  
       stage('Docker Image Push'){
         println "Pushing docker images in ECR repository"
-        docker.withRegistry("https://${AWS_ACCOUNT}.dkr.ecr.${AWS_REGION}.amazonaws.com", "ecr:${AWS_REGION}:${AWS_ECR_TOKEN}") {
-          docker.image(imageTag).push()
+        docker.withRegistry("https://" + AWS_ACCOUNT + ".dkr.ecr." + AWS_REGION + ".amazonaws.com", 
+        "ecr:" + AWS_REGION + ":" + AWS_ECR_TOKEN) {
+          docker.image(ARTIFACT_ID+":"+VERSION).push()
         }    
       }      
  
