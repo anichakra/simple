@@ -71,14 +71,6 @@ node {
       }      
  
       stage('ECS Deploy') {
-        def taskDefile = "file://aws/task-definition-" + VERSION + ".json"
-        sh("sed -e 's;%BUILD_TAG%;" + VERSION + ";g'                             \
-                  aws/task-definition.json >                                      \
-                  aws/task-definition-" + VERSION + ".json")
-        
-        def currentTaskDefCmd = "aws ecs describe-task-definition --task-definition " + AWS_ECS_TASK_DEF_NAME    \
-           + " | egrep 'revision' | tr ',' ' ' | awk '{print \$2}'"
-        def currTaskDef = sh (returnStdout: true, script: currentTaskDefCmd).trim()
           
         println "########## Deploying services to ECS ##########"
         docker.image(AWS_CLI_IMAGE).inside(AWS_CLI_VOLUME) {
@@ -89,6 +81,14 @@ node {
               credentialsId: AWS_CREDENTIAL_ID,  
               secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
             ]]) {
+            def taskDefile = "file://aws/task-definition-" + VERSION + ".json"
+            sh("sed -e 's;%BUILD_TAG%;" + VERSION + ";g'                             \
+                     aws/task-definition.json >                                      \
+                     aws/task-definition-" + VERSION + ".json")
+        
+            def currentTaskDefCmd = "aws ecs describe-task-definition --task-definition " + AWS_ECS_TASK_DEF_NAME    \
+                + " | egrep 'revision' | tr ',' ' ' | awk '{print \$2}'"
+            def currTaskDef = sh (returnStdout: true, script: currentTaskDefCmd).trim()
           
             def taskListCmd = "aws ecs list-tasks  --cluster " + AWS_ECS_CLUSTER_NAME  \
                                                + " --family "  + AWS_ECS_TASK_DEF_NAME \
