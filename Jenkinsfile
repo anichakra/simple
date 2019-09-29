@@ -129,7 +129,7 @@ node {
                 }
               }
               // Register the new [TaskDefinition]
-               sh("aws ecs register-task-definition --family " + AWS_ECS_TASK_DEF_NAME + " --cli-input-json " + taskDefile)
+               sh("aws ecs register-task-definition --region " + AWS_REGION + " --family " + AWS_ECS_TASK_DEF_NAME + " --cli-input-json " + taskDefile)
              
              // Get the last registered [TaskDefinition#revision]
            def taskRevisionCmd = "aws ecs describe-task-definition --task-definition " + AWS_ECS_TASK_DEF_NAME     \
