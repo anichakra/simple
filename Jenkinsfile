@@ -88,7 +88,8 @@ node {
                 def splitted = currentTask.split('\n')
                 for(i=0; i<splitted.length; i++ ){
                   def task = splitted[ i ]        
-                  println task         
+                  println task
+                           
                   sh "aws ecs stop-task --region us-east-1 --cluster ${clusterName} --task ${task}"
                 }
               }
