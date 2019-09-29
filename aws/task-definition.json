@@ -2,7 +2,7 @@
     "family": "simple-rest-service-task",
     "containerDefinitions": [
         {
-            "image": "%ACCOUNT%.dkr.ecr.us-east-1.amazonaws.com/simple-rest-service:%BUILD_TAG%",
+            "image": "595233065713.dkr.ecr.us-east-1.amazonaws.com/simple-rest-service:%BUILD_TAG%",
             "name": "simple-rest-service-task",
             "essential": true,
             "cpu": 100,

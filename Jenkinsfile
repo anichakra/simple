@@ -6,27 +6,24 @@ node {
   // Maven Artifact Id and Version
   def ARTIFACT_ID = "simple-rest-service"
   def VERSION     = "0.0.1.BUILD-SNAPSHOT"
+  // AWS ECS attributes
+  def AWS_ECS_CLUSTER_NAME  = "cloudnativelab-ecs-cluster"
+  def AWS_ECS_SERVICE_NAME  = "simple-rest-service" 
+  def AWS_ECS_TASK_DEF_NAME = "simple-rest-service-task"
+  def AWS_ECS_TASK_COUNT    = 2
+      
+  // AWS ECR Connection Token as configured in Jenkins ECR plugin
+  def AWS_ECR_TOKEN = "5fe9919d-8fe5-42eb-9c4c-e38d3a7c3dbb"
+      
+  // ID of credentials in Jenkins as configured in Jenkins project
+  def AWS_CREDENTIAL_ID = "aws_id"  
+      
+  // AWS attributes - might not be required to be changed often   
+  def AWS_REGION  = "us-east-1"
+  def AWS_ACCOUNT = "595233065713" 
  
   ws("workspace/${env.JOB_NAME}/${env.BRANCH_NAME}") {
-    try {
-           
-      // AWS ECS attributes
-      def AWS_ECS_CLUSTER_NAME  = "cloudnativelab-ecs-cluster"
-      def AWS_ECS_SERVICE_NAME  = "simple-rest-service" 
-      def AWS_ECS_TASK_DEF_NAME = "simple-rest-service-task"
-      def AWS_ECS_TASK_DEF_REV  = 2
-      def AWS_ECS_TASK_COUNT    = 4
-      
-      // AWS ECR Connection Token as configured in Jenkins ECR plugin
-      def AWS_ECR_TOKEN = "5fe9919d-8fe5-42eb-9c4c-e38d3a7c3dbb"
-      
-      // ID of credentials in Jenkins as configured in Jenkins project
-      def AWS_CREDENTIAL_ID = "aws_id"  
-      
-      // AWS attributes - might not be required to be changed often   
-      def AWS_REGION  = "us-east-1"
-      def AWS_ACCOUNT = "595233065713" 
-      
+    try {      
       // Docker image details - might not be required to be changed often    
       def MAVEN_IMAGE   = "maven:3-jdk-11"
       def AWS_CLI_IMAGE  = "mikesir87/aws-cli"
