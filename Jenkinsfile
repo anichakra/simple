@@ -29,7 +29,7 @@ node {
       
       // Docker image details - might not be required to be changed often    
       def MAVEN_IMAGE   = "maven:3-jdk-11"
-      def AWS_CLI_IMAGE  = "atlassian/pipelines-awscli"
+      def AWS_CLI_IMAGE  = "mikesir87/aws-cli"
       def MAVEN_VOLUME     = "-v $HOME/.m2:/root/.m2"
       def AWS_CLI_VOLUME = "-v $HOME/.aws:/root/.aws"
 
@@ -74,6 +74,15 @@ node {
       }      
  
       stage('ECS Deploy') {
+        def taskDefile = "file://aws/task-definition-" + VERSION + ".json"
+        sh("sed -e 's;%BUILD_TAG%;" + VERSION + ";g'                             \
+                  aws/task-definition.json >                                      \
+                  aws/task-definition-" + VERSION + ".json")
+        
+        def currentTaskDefCmd = "aws ecs describe-task-definition --task-definition " + AWS_ECS_TASK_DEF_NAME    \
+           + " | egrep 'revision' | tr ',' ' ' | awk '{print \$2}'"
+        def currTaskDef = sh (returnStdout: true, script: currentTaskDefCmd).trim()
+          
         println "########## Deploying services to ECS ##########"
         docker.image(AWS_CLI_IMAGE).inside(AWS_CLI_VOLUME) {
           withCredentials(
@@ -88,22 +97,25 @@ node {
                                                + " --family "  + AWS_ECS_TASK_DEF_NAME \
                                                + " --region "  + AWS_REGION            \
                                                + " --output text | awk '{print \$2}'"        
-          
+            
             def currentTasks = sh(returnStdout: true, script: taskListCmd).trim()
+          
             println "Current Tasks: " + currentTasks  
-             
+            if(currTaskDef) {
+                sh ("aws ecs update-service --cluster "         + AWS_ECS_CLUSTER_NAME  \
+                                        + " --service "         + AWS_ECS_SERVICE_NAME  \
+                                        + " --task-definition " + AWS_ECS_TASK_DEF_NAME \
+                                        + ":"                   + currTaskDef           \
+                                        + " --desired-count 0"                          \
+                                        + " --region "          + AWS_REGION)          
+              }
+            
             while(currentTasks) {    
               def t = currentTasks.split("\n") 
               String[] taskArray = t as String[]
               println "No. of Task to stop: " + taskArray.length
               println "Stopping all the current tasks: " 
-              sh ("aws ecs update-service --cluster "         + AWS_ECS_CLUSTER_NAME  \
-                                      + " --service "         + AWS_ECS_SERVICE_NAME  \
-                                      + " --task-definition " + AWS_ECS_TASK_DEF_NAME \
-                                      + ":"                   + AWS_ECS_TASK_DEF_REV  \
-                                      + " --desired-count 0"                          \
-                                      + " --region "          + AWS_REGION)          
-        
+              
               for(i=0; i<taskArray.length; i++ ) {
                 try {
                   def task = taskArray[ i ]        
@@ -116,6 +128,14 @@ node {
                   println "Task cannot be stopped: " + ee.toString()
                 }
               }
+              // Register the new [TaskDefinition]
+               sh("aws ecs register-task-definition --family " + AWS_ECS_TASK_DEF_NAME + " --cli-input-json " + taskDefile)
+             
+             // Get the last registered [TaskDefinition#revision]
+           def taskRevisionCmd = "aws ecs describe-task-definition --task-definition " + AWS_ECS_TASK_DEF_NAME     \
+                                          +   " | egrep 'revision' | tr ',' ' ' | awk '{print \$2}'"
+           def taskRevision = sh (returnStdout: true, script: taskRevisionCmd).trim()
+             
               currentTasks = sh(returnStdout: true, script: taskListCmd).trim()
               println "Current Tasks: " + currentTasks  
               
@@ -130,7 +150,7 @@ node {
             sh ("aws ecs update-service --cluster "         + AWS_ECS_CLUSTER_NAME  \
                                     + " --service "         + AWS_ECS_SERVICE_NAME  \
                                     + " --task-definition " + AWS_ECS_TASK_DEF_NAME \
-                                    + ":"                   + AWS_ECS_TASK_DEF_REV  \
+                                    + ":"                   + taskRevision  \
                                     + " --desired-count "   + AWS_ECS_TASK_COUNT    \
                                     + " --region "          + AWS_REGION)
           }
