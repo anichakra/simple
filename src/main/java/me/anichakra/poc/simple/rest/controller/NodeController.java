@@ -1,6 +1,7 @@
 package me.anichakra.poc.simple.rest.controller;
 
 import java.net.UnknownHostException;
+import java.util.Iterator;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -21,19 +22,21 @@ public class NodeController {
     @GetMapping("/info")
     @ResponseBody
     public String getNodeId(HttpServletRequest request) throws UnknownHostException {
-        return System.getProperty("node.id") + ";local: " + getAddress(request) + ";remote: " + getRemote(request);
+        return System.getProperty("node.id") + ";local: " + getAddress(request) + ";headers: " + getRemote(request);
     }
 
     public String getAddress(HttpServletRequest request) throws UnknownHostException {
         return request.getLocalAddr();
     }
 
-    private static final String[] IP_HEADER_CANDIDATES = { "X-Forwarded-For", "Proxy-Client-IP", "WL-Proxy-Client-IP",
-            "HTTP_X_FORWARDED_FOR", "HTTP_X_FORWARDED", "HTTP_X_CLUSTER_CLIENT_IP", "HTTP_CLIENT_IP",
-            "HTTP_FORWARDED_FOR", "HTTP_FORWARDED", "HTTP_VIA", "REMOTE_ADDR" };
-
     public String getRemote(HttpServletRequest request) {
+        Iterator <String>itr = request.getHeaderNames().asIterator();
+        StringBuilder sb = new StringBuilder();
+        while (itr.hasNext()) {
+            String headerName = itr.next();
+            sb.append( headerName).append(":").append(request.getHeader(headerName)).append(";");
+        }
       
-        return request.getRemoteAddr();
+        return sb.toString();
     }
 }
