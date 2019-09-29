@@ -25,7 +25,7 @@ public class NodeController {
     }
 
     public String getAddress(HttpServletRequest request) throws UnknownHostException {
-        return request.getLocalAddr() + ":" + request.getLocalName();
+        return request.getLocalAddr();
     }
 
     private static final String[] IP_HEADER_CANDIDATES = { "X-Forwarded-For", "Proxy-Client-IP", "WL-Proxy-Client-IP",
