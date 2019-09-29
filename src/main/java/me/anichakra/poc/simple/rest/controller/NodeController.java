@@ -47,10 +47,6 @@ public class NodeController {
     @GetMapping
     @ResponseBody
     public String getRemoteAddress(HttpServletRequest request) {
-
-        if (RequestContextHolder.getRequestAttributes() == null) {
-            return "0.0.0.0";
-        }
         for (String header : IP_HEADER_CANDIDATES) {
             String ipList = request.getHeader(header);
             if (ipList != null && ipList.length() != 0 && !"unknown".equalsIgnoreCase(ipList)) {

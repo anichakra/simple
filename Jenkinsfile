@@ -93,14 +93,15 @@ node {
             println "Stopping all the current tasks: " 
             println currentTasks
 
-            sh ("aws ecs update-service --cluster "         + AWS_ECS_CLUSTER_NAME  \
-                                    + " --service "         + AWS_ECS_SERVICE_NAME  \
-                                    + " --task-definition " + AWS_ECS_TASK_DEF_NAME \
-                                    + ":"                   + AWS_ECS_TASK_DEF_REV  \
-                                    + " --desired-count 0"                          \
-                                    + " --region "          + AWS_REGION)          
-            
             if (currentTasks) {
+              sh ("aws ecs update-service --cluster "         + AWS_ECS_CLUSTER_NAME  \
+                                      + " --service "         + AWS_ECS_SERVICE_NAME  \
+                                      + " --task-definition " + AWS_ECS_TASK_DEF_NAME \
+                                      + ":"                   + AWS_ECS_TASK_DEF_REV  \
+                                      + " --desired-count 0"                          \
+                                      + " --region "          + AWS_REGION)          
+            
+              
               def taskArray = currentTasks.split('\n')
               for(i=0; i<taskArray.length; i++ ) {
                 try {
