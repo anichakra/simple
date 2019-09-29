@@ -40,7 +40,6 @@ public class NodeController {
                 return ip;
             }
         }
-
         return request.getRemoteAddr();
     }
 }
