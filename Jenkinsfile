@@ -93,12 +93,13 @@ node {
             println "Current Tasks: " + currentTasks  
             if (currentTasks) {
 
-            def taskArray = currentTasks.split("\n") as String[ ] 
-            println "Tasks Array" + taskArray  
+            def t = currentTasks.split("\n") 
+            def taskArray = t as String[]
+            println "Tasks Array: " + taskArray  
             
             def count = 100 // just a number for waiting
             
-            println "No. of Task to stop: " taskArray.length
+            println "No. of Task to stop: " taskArray.size()
             println "Stopping all the current tasks: " 
             
             while(taskArray.length>0 && --count==0) {
