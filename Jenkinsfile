@@ -32,7 +32,7 @@ node {
       def MAVEN_VOLUME     = "-v $HOME/.m2:/root/.m2"
       def AWS_CLI_VOLUME = "-v $HOME/.aws:/root/.aws"
 
-      println "Pipeline started in workspace/" + env.JOB_NAME + env.BRANCH_NAME
+      println "Pipeline started in workspace/" + env.JOB_NAME + "/" + env.BRANCH_NAME
       
       stage('SCM Checkout') {
         println "########## Checking out latest from git repo ##########"
@@ -42,7 +42,7 @@ node {
       stage('Unit Testing') {
         println "########## Executing unit test cases ##########"
         docker.image(MAVEN_IMAGE).inside(MAVEN_VOLUME) {
-          sh 'mvn clean test'
+          sh("mvn clean test")
         }
       }
   
@@ -51,7 +51,7 @@ node {
      stage('JAR Install') {
         println "########## Installing jar files in local maven repository ##########"
         docker.image(MAVEN_IMAGE).inside(MAVEN_VOLUME) {
-          sh 'mvn install'
+          sh('mvn install')
         }
       }
       
@@ -60,7 +60,7 @@ node {
       stage('Docker Image Creation') {
         println "########## Creating docker images ##########"
         docker.image(MAVEN_IMAGE).inside(MAVEN_VOLUME) {
-          sh 'mvn docker:build'    
+          sh('mvn docker:build') 
         }
       }
  
@@ -82,26 +82,25 @@ node {
               credentialsId: AWS_CREDENTIAL_ID,  
               secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
             ]]) {
-                
+          
+          def taskListCmd = "aws ecs list-tasks  --cluster " \
+          + AWS_ECS_CLUSTER_NAME + "--family "               \
+          + AWS_ECS_TASK_DEF_NAME + "--region " + AWS_REGION \
+          + "--output text | awk '{print \$2}'"        
+          
           def currentTasks = sh (
             returnStdout: true,
-            script:  "                                              \
-              aws ecs list-tasks  --cluster ${AWS_ECS_CLUSTER_NAME} \
-                                  --family ${AWS_ECS_TASK_DEF_NAME} \
-                                  --region ${AWS_REGION}            \
-                                  --output text                     \
-                                  | egrep 'TASKARNS'                \
-                                  | awk '{print \$2}'               \
-          "
-        ).trim()
+            script: taskListCmd
+          ).trim()
             println "Stopping all the current tasks: " 
             println currentTasks
 
-            sh "aws ecs update-service --cluster ${AWS_ECS_CLUSTER_NAME}                                  \
-                                       --service ${AWS_ECS_SERVICE_NAME}                                  \
-                                       --task-definition ${AWS_ECS_TASK_DEF_NAME}:${AWS_ECS_TASK_DEF_REV} \
-                                       --desired-count 0                                                  \
-                                       --region ${AWS_REGION}"
+            sh ("aws ecs update-service --cluster " + AWS_ECS_CLUSTER_NAME          \
+                                    + " --service " + AWS_ECS_SERVICE_NAME          \
+                                    + " --task-definition " + AWS_ECS_TASK_DEF_NAME \
+                                    + ":" + AWS_ECS_TASK_DEF_REV                    \
+                                    + " --desired-count 0"                          \
+                                    + " --region " + AWS_REGION)
             
             if (currentTasks) {
               def taskArray = currentTasks.split('\n')
