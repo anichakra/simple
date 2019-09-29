@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.aws.context.config.annotation.EnableContextInstanceData;
 
 @SpringBootApplication
-@EnableContextInstanceData
+//@EnableContextInstanceData
 
 public class Application {
 
