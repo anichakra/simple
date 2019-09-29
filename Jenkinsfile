@@ -105,7 +105,7 @@ node {
                                         + ":"                   + currTaskDef           \
                                         + " --desired-count 0"                          \
                                         + " --region "          + AWS_REGION)          
-              }
+            }
             
             while(currentTasks) {    
               def t = currentTasks.split("\n") 
