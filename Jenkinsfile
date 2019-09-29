@@ -131,11 +131,7 @@ node {
               // Register the new [TaskDefinition]
                sh("aws ecs register-task-definition --region " + AWS_REGION + " --family " + AWS_ECS_TASK_DEF_NAME + " --cli-input-json " + taskDefile)
              
-             // Get the last registered [TaskDefinition#revision]
-           def taskRevisionCmd = "aws ecs describe-task-definition --task-definition " + AWS_ECS_TASK_DEF_NAME     \
-                                          +   " | egrep 'revision' | tr ',' ' ' | awk '{print \$2}'"
-           def taskRevision = sh (returnStdout: true, script: taskRevisionCmd).trim()
-             
+                
               currentTasks = sh(returnStdout: true, script: taskListCmd).trim()
               println "Current Tasks: " + currentTasks  
               
@@ -145,7 +141,11 @@ node {
                 println "Tasks Array: " + taskArray  
               }
             }
-            
+              // Get the last registered [TaskDefinition#revision]
+           def taskRevisionCmd = "aws ecs describe-task-definition --task-definition " + AWS_ECS_TASK_DEF_NAME     \
+                                          +   " | egrep 'revision' | tr ',' ' ' | awk '{print \$2}'"
+           def taskRevision = sh (returnStdout: true, script: taskRevisionCmd).trim()
+        
             println "Updating ECS cluster"
             sh ("aws ecs update-service --cluster "         + AWS_ECS_CLUSTER_NAME  \
                                     + " --service "         + AWS_ECS_SERVICE_NAME  \
