@@ -1,6 +1,6 @@
 #!groovy
 // Pipeline as code using Jenkinsfile for a microservice
-@author Anirban Chakraborty
+// @author Anirban Chakraborty
 
 node {
   // Maven Artifact Id and Version
