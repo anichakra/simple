@@ -81,12 +81,13 @@ node {
               secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
             ]]) {
                 
-            echo "Listing ECS task for cluster ${clusterName} with family ${taskDefName}"
+            println "Listing ECS task for cluster ${clusterName} with family ${taskDefName}"
             def currentTask = sh (
-              returnStdout: true,
-              script:  "
+              returnStdout: true, 
+              script: "
                 aws ecs list-tasks  --cluster ${clusterName}                                \
-                                    --family ${taskDefName} --region ${region}              \
+                                    --family ${taskDefName}                                 \
+                                    --region ${region}                                      \
                                     --output text                                           \
                                     | egrep 'TASKARNS'                                      \
                                     | awk '{print \$2}'                                     \
