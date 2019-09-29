@@ -139,7 +139,7 @@ node {
               }
             }
               // Get the last registered [TaskDefinition#revision]
-           def taskRevisionCmd = "aws ecs describe-task-definition --task-definition " + AWS_ECS_TASK_DEF_NAME     \
+           def taskRevisionCmd = "aws ecs describe-task-definition --region " + AWS_REGION + " --task-definition " + AWS_ECS_TASK_DEF_NAME     \
                                           +   " | egrep 'revision' | tr ',' ' ' | awk '{print \$2}'"
            def taskRevision = sh (returnStdout: true, script: taskRevisionCmd).trim()
         
