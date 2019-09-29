@@ -91,26 +91,19 @@ node {
           
             def currentTasks = sh(returnStdout: true, script: taskListCmd).trim()
             println "Current Tasks: " + currentTasks  
-            if (currentTasks) {
-
-            def t = currentTasks.split("\n") 
-            String[] taskArray = t as String[]
-            println "Tasks Array: " + taskArray  
-            
-            def count = 100 // just a number for waiting
-            
-            println "No. of Task to stop: " + taskArray.length
-            println "Stopping all the current tasks: " 
-            sh ("aws ecs update-service --cluster "         + AWS_ECS_CLUSTER_NAME  \
-                                    + " --service "         + AWS_ECS_SERVICE_NAME  \
-                                    + " --task-definition " + AWS_ECS_TASK_DEF_NAME \
-                                    + ":"                   + AWS_ECS_TASK_DEF_REV  \
-                                    + " --desired-count 0"                          \
-                                    + " --region "          + AWS_REGION)          
-            
-            while(currentTasks) {
-              println "Iteration no.:" + count--
-            
+             
+            while(currentTasks) {    
+              def t = currentTasks.split("\n") 
+              String[] taskArray = t as String[]
+              println "No. of Task to stop: " + taskArray.length
+              println "Stopping all the current tasks: " 
+              sh ("aws ecs update-service --cluster "         + AWS_ECS_CLUSTER_NAME  \
+                                      + " --service "         + AWS_ECS_SERVICE_NAME  \
+                                      + " --task-definition " + AWS_ECS_TASK_DEF_NAME \
+                                      + ":"                   + AWS_ECS_TASK_DEF_REV  \
+                                      + " --desired-count 0"                          \
+                                      + " --region "          + AWS_REGION)          
+        
               for(i=0; i<taskArray.length; i++ ) {
                 try {
                   def task = taskArray[ i ]        
@@ -130,14 +123,8 @@ node {
                 println "Tasks Array: " + taskArray  
               }
             }
-            }
             
-            println "Updating ECS cluster: " + AWS_ECS_CLUSTER_NAME  \
-            + " for service: "               + AWS_ECS_SERVICE_NAME  \
-            + " with tasks: "                + AWS_ECS_TASK_DEF_NAME \
-            + ":"                            + AWS_ECS_TASK_DEF_REV  \
-            + "with desired-count: "         + AWS_ECS_TASK_COUNT
-            
+            println "Updating ECS cluster"
             sh ("aws ecs update-service --cluster "         + AWS_ECS_CLUSTER_NAME  \
                                     + " --service "         + AWS_ECS_SERVICE_NAME  \
                                     + " --task-definition " + AWS_ECS_TASK_DEF_NAME \
