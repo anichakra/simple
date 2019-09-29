@@ -34,7 +34,7 @@ public class NodeController {
         StringBuilder sb = new StringBuilder();
         while (itr.hasNext()) {
             String headerName = itr.next();
-            sb.append( headerName).append(":").append(request.getHeader(headerName)).append(";");
+            sb.append( headerName).append("=").append(request.getHeader(headerName)).append("\n");
         }
       
         return sb.toString();
