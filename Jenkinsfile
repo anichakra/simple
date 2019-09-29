@@ -36,7 +36,7 @@ node {
 
       stage('Unit Testing') {
         println "Executing unit test cases"
-        docker.image(MAVEN_IMAGE).inside(MAVEN_IMAGE) {
+        docker.image(MAVEN_IMAGE).inside(MAVEN_VOLUME) {
           sh 'mvn clean test'
         }
       }
@@ -45,7 +45,7 @@ node {
     
      stage('JAR Install') {
         println "Installing jar files in local maven repository"
-        docker.image(MAVEN_IMAGE).inside(MAVEN_IMAGE) {
+        docker.image(MAVEN_IMAGE).inside(MAVEN_VOLUME) {
           sh 'mvn install'
         }
       }
@@ -54,7 +54,7 @@ node {
   
       stage('Docker Image Creation') {
         println "Creating docker images"
-        docker.image(MAVEN_IMAGE).inside(MAVEN_IMAGE) {
+        docker.image(MAVEN_IMAGE).inside(MAVEN_VOLUME) {
           sh 'mvn docker:build'    
         }
       }
