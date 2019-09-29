@@ -92,9 +92,10 @@ node {
             def currentTasks = sh(returnStdout: true, script: taskListCmd).trim()
             def taskArray = currentTasks.split('\n')
             def count = 10
+            println "Stopping all the current tasks: " 
+            println currentTasks
             while(taskArray.length>0 && --count==0) {
-              println "Stopping all the current tasks: " 
-              println currentTasks
+              println "Iteration no.:" count
               sh ("aws ecs update-service --cluster "         + AWS_ECS_CLUSTER_NAME  \
                                       + " --service "         + AWS_ECS_SERVICE_NAME  \
                                       + " --task-definition " + AWS_ECS_TASK_DEF_NAME \
@@ -102,7 +103,7 @@ node {
                                       + " --desired-count 0"                          \
                                       + " --region "          + AWS_REGION)          
             
-              // Stopping all tasks in a loop till all tasks are done        
+              // Stopping all tasks in a loop till all tasks are stopped        
               for(i=0; i<taskArray.length; i++ ) {
                 try {
                   def task = taskArray[ i ]        
