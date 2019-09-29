@@ -90,9 +90,12 @@ node {
                                                + " --output text | awk '{print \$2}'"        
           
             def currentTasks = sh(returnStdout: true, script: taskListCmd).trim()
-            println "Current Tasks: " currentTasks   
+            println "Current Tasks: " + currentTasks  
+            if (currentTasks) {
+
             def taskArray = currentTasks.split()
             def count = 100 // just a number for waiting
+            
             println "No. of Task to stop: " taskArray.length
             println "Stopping all the current tasks: " 
             
@@ -120,7 +123,7 @@ node {
               currentTasks = sh(returnStdout: true, script: taskListCmd).trim()
               taskArray = currentTasks.split('\n')
             }
-           
+            }
             
             println "Updating ECS cluster: " + AWS_ECS_CLUSTER_NAME  \
             + " for service: "               + AWS_ECS_SERVICE_NAME  \
