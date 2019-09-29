@@ -126,7 +126,7 @@ node {
               currentTasks = sh(returnStdout: true, script: taskListCmd).trim()
               if (currentTasks) {
                 t = currentTasks.split("\n") 
-                String[] taskArray = t as String[]
+                taskArray = t as String[]
                 println "Tasks Array: " + taskArray  
               }
             }
