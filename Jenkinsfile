@@ -89,11 +89,12 @@ node {
                                                + " --region "  + AWS_REGION            \
                                                + " --output text | awk '{print \$2}'"        
           
-            def currentTasks = sh (returnStdout: true, script: taskListCmd).trim()
-            println "Stopping all the current tasks: " 
-            println currentTasks
-
-            if (currentTasks) {
+            def currentTasks = sh(returnStdout: true, script: taskListCmd).trim()
+            def taskArray = currentTasks.split('\n')
+            def count = 10
+            while(taskArray.length>0 && --count==0) {
+              println "Stopping all the current tasks: " 
+              println currentTasks
               sh ("aws ecs update-service --cluster "         + AWS_ECS_CLUSTER_NAME  \
                                       + " --service "         + AWS_ECS_SERVICE_NAME  \
                                       + " --task-definition " + AWS_ECS_TASK_DEF_NAME \
@@ -101,8 +102,7 @@ node {
                                       + " --desired-count 0"                          \
                                       + " --region "          + AWS_REGION)          
             
-              
-              def taskArray = currentTasks.split('\n')
+              // Stopping all tasks in a loop till all tasks are done        
               for(i=0; i<taskArray.length; i++ ) {
                 try {
                   def task = taskArray[ i ]        
@@ -115,7 +115,10 @@ node {
                   println "Task cannot be stopped: " + ee.toString()
                 }
               }
+              currentTasks = sh(returnStdout: true, script: taskListCmd).trim()
+              taskArray = currentTasks.split('\n')
             }
+           
             
             println "Updating ECS cluster: " + AWS_ECS_CLUSTER_NAME  \
             + " for service: "               + AWS_ECS_SERVICE_NAME  \
