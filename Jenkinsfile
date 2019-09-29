@@ -87,7 +87,7 @@ node {
             def taskListCmd = "aws ecs list-tasks  --cluster " + AWS_ECS_CLUSTER_NAME  \
                                                + " --family "  + AWS_ECS_TASK_DEF_NAME \
                                                + " --region "  + AWS_REGION            \
-                                               + "--output text | awk '{print \$2}'"        
+                                               + " --output text | awk '{print \$2}'"        
           
             def currentTasks = sh (returnStdout: true, script: taskListCmd).trim()
             println "Stopping all the current tasks: " 
