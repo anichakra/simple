@@ -90,13 +90,13 @@ node {
                                                + " --output text | awk '{print \$2}'"        
           
             def currentTasks = sh(returnStdout: true, script: taskListCmd).trim()
-            def taskArray = currentTasks.split('\n')
+            def taskArray = currentTasks.split()
             def count = 100 // just a number for waiting
             println "No. of Task to stop: " taskArray.length
             println currentTasks
             println "Stopping all the current tasks: " 
             
-            while(taskArray.length>0 || --count==0) {
+            while(taskArray.length>0 && --count==0) {
               println "Iteration no.:" count
               sh ("aws ecs update-service --cluster "         + AWS_ECS_CLUSTER_NAME  \
                                       + " --service "         + AWS_ECS_SERVICE_NAME  \
@@ -140,7 +140,6 @@ node {
     } catch(e) {
       println "Err: Incremental Build failed with Error: " + e.toString()
       currentBuild.result = 'FAILED'
-      notifyFailed()
       throw e
     } finally  {
       stage('Cleanup') {
