@@ -73,6 +73,26 @@ node {
         }    
       }      
  
+      stage('Service Test'){
+        println "########## Running the service ##########"
+        docker.image(ARTIFACT_ID + ":" + VERSION).runWith("-p 8085:8080") { c ->
+          sh "docker logs ${c.id}"
+          docker.image(ARTIFACT_ID + ":" + VERSION).inside("--link ${c.id}:db") {
+            /* Wait until mysql service is up */
+            sh 'while ! mysqladmin ping -hdb --silent; do sleep 1; done'
+          }
+          docker.image('centos:7').inside("--link ${c.id}:db") {
+            /*
+             * Run some tests which require MySQL, and assume that it is
+             * available on the host name `db`
+             */
+            sh 'make check'
+          }
+        }
+      
+            
+      }
+      
       stage('ECS Deploy') {
         println "########## Deploying services to ECS ##########"
         docker.image(AWS_CLI_IMAGE).inside(AWS_CLI_VOLUME) {

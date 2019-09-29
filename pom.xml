@@ -86,11 +86,11 @@
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 		</dependency>
-		<dependency>
+		<!-- <dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-aws-autoconfigure</artifactId>
 
-		</dependency>
+		</dependency> -->
 	</dependencies>
 
 	<build>
