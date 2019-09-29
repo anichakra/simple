@@ -10,7 +10,7 @@ node {
   def AWS_ECS_CLUSTER_NAME  = "cloudnativelab-ecs-cluster"
   def AWS_ECS_SERVICE_NAME  = "simple-rest-service" 
   def AWS_ECS_TASK_DEF_NAME = "simple-rest-service-task"
-  def AWS_ECS_TASK_COUNT    = 2
+  def AWS_ECS_TASK_COUNT    = 4
       
   // AWS ECR Connection Token as configured in Jenkins ECR plugin
   def AWS_ECR_TOKEN = "5fe9919d-8fe5-42eb-9c4c-e38d3a7c3dbb"
