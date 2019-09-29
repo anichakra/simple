@@ -2,13 +2,13 @@
 //@author Anirban Chakraborty
 
 node {
+  // Maven Artifact Id and Version
+  def ARTIFACT_ID = "simple-rest-service"
+  def VERSION     = "0.0.1.BUILD-SNAPSHOT"
+ 
   ws("workspace/${env.JOB_NAME}/${env.BRANCH_NAME}") {
     try {
-      
-      // Maven Artifact Id and Version
-      def ARTIFACT_ID = "simple-rest-service"
-      def VERSION     = "0.0.1.BUILD-SNAPSHOT"
-      
+           
       // AWS ECS attributes
       def AWS_ECS_CLUSTER_NAME  = "cloudnativelab-ecs-cluster"
       def AWS_ECS_SERVICE_NAME  = "simple-rest-service" 
