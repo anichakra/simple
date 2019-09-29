@@ -115,7 +115,8 @@ node {
             
             println "Updating ECS cluster: " + AWS_ECS_CLUSTER_NAME \
             + " for service: " + AWS_ECS_SERVICE_NAME               \
-            + " with tasks: " +  AWS_ECS_TASK_DEF_NAME + ":" + AWS_ECS_TASK_DEF_REV
+            + " with tasks: " +  AWS_ECS_TASK_DEF_NAME + ":" + AWS_ECS_TASK_DEF_REV \
+            + "with desired-count: " + AWS_ECS_TASK_COUNT
             
             sh "aws ecs update-service --cluster ${AWS_ECS_CLUSTER_NAME}                                  \
                                        --service ${AWS_ECS_SERVICE_NAME}                                  \
