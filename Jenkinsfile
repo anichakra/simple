@@ -1,5 +1,6 @@
 #!groovy
-//@author Anirban Chakraborty
+// Pipeline as code using Jenkinsfile for a microservice
+@author Anirban Chakraborty
 
 node {
   // Maven Artifact Id and Version
@@ -83,24 +84,21 @@ node {
               secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
             ]]) {
           
-          def taskListCmd = "aws ecs list-tasks  --cluster " \
-          + AWS_ECS_CLUSTER_NAME + "--family "               \
-          + AWS_ECS_TASK_DEF_NAME + "--region " + AWS_REGION \
-          + "--output text | awk '{print \$2}'"        
+            def taskListCmd = "aws ecs list-tasks  --cluster " + AWS_ECS_CLUSTER_NAME  \
+                                               + " --family "  + AWS_ECS_TASK_DEF_NAME \
+                                               + " --region "  + AWS_REGION            \
+                                               + "--output text | awk '{print \$2}'"        
           
-          def currentTasks = sh (
-            returnStdout: true,
-            script: taskListCmd
-          ).trim()
+            def currentTasks = sh (returnStdout: true, script: taskListCmd).trim()
             println "Stopping all the current tasks: " 
             println currentTasks
 
-            sh ("aws ecs update-service --cluster " + AWS_ECS_CLUSTER_NAME          \
-                                    + " --service " + AWS_ECS_SERVICE_NAME          \
+            sh ("aws ecs update-service --cluster "         + AWS_ECS_CLUSTER_NAME  \
+                                    + " --service "         + AWS_ECS_SERVICE_NAME  \
                                     + " --task-definition " + AWS_ECS_TASK_DEF_NAME \
-                                    + ":" + AWS_ECS_TASK_DEF_REV                    \
+                                    + ":"                   + AWS_ECS_TASK_DEF_REV  \
                                     + " --desired-count 0"                          \
-                                    + " --region " + AWS_REGION)
+                                    + " --region "          + AWS_REGION)          
             
             if (currentTasks) {
               def taskArray = currentTasks.split('\n')
@@ -108,9 +106,9 @@ node {
                 try {
                   def task = taskArray[ i ]        
                   println "Stopping Task: " + task
-                  sh "aws ecs stop-task --region ${AWS_REGION}              \
-                                        --cluster ${AWS_ECS_CLUSTER_NAME}   \
-                                        --task ${task}"
+                  sh ("aws ecs stop-task --region " + AWS_REGION           \
+                                     + " --cluster "+ AWS_ECS_CLUSTER_NAME \
+                                     + " --task "   + task)
                                                     
                 } catch (ee) {
                   println "Task cannot be stopped: " + ee.toString()
@@ -118,28 +116,29 @@ node {
               }
             }
             
-            println "Updating ECS cluster: " + AWS_ECS_CLUSTER_NAME                 \
-            + " for service: " + AWS_ECS_SERVICE_NAME                               \
-            + " with tasks: " +  AWS_ECS_TASK_DEF_NAME + ":" + AWS_ECS_TASK_DEF_REV \
-            + "with desired-count: " + AWS_ECS_TASK_COUNT
+            println "Updating ECS cluster: " + AWS_ECS_CLUSTER_NAME  \
+            + " for service: "               + AWS_ECS_SERVICE_NAME  \
+            + " with tasks: "                + AWS_ECS_TASK_DEF_NAME \
+            + ":"                            + AWS_ECS_TASK_DEF_REV  \
+            + "with desired-count: "         + AWS_ECS_TASK_COUNT
             
-            sh "aws ecs update-service --cluster ${AWS_ECS_CLUSTER_NAME}                                  \
-                                       --service ${AWS_ECS_SERVICE_NAME}                                  \
-                                       --task-definition ${AWS_ECS_TASK_DEF_NAME}:${AWS_ECS_TASK_DEF_REV} \
-                                       --desired-count ${AWS_ECS_TASK_COUNT}                              \
-                                       --region ${AWS_REGION}"
+            sh ("aws ecs update-service --cluster "         + AWS_ECS_CLUSTER_NAME  \
+                                    + " --service "         + AWS_ECS_SERVICE_NAME  \
+                                    + " --task-definition " + AWS_ECS_TASK_DEF_NAME \
+                                    + ":"                   + AWS_ECS_TASK_DEF_REV  \
+                                    + " --desired-count "   + AWS_ECS_TASK_COUNT    \
+                                    + " --region "          + AWS_REGION)
           }
         }
       }      
-  // run ECS to get new image (canary release - rolling update)
-  // run microservice automation script
-   } catch(e) {
+    } catch(e) {
       println "Err: Incremental Build failed with Error: " + e.toString()
       currentBuild.result = 'FAILED'
       notifyFailed()
       throw e
     } finally  {
       stage('Cleanup') {
+        println "Cleaning up"
         sh("docker image rm " + ARTIFACT_ID + ":" + VERSION)
         deleteDir()
       }          
