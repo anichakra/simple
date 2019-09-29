@@ -99,7 +99,7 @@ node {
             
             def count = 100 // just a number for waiting
             
-            println "No. of Task to stop: " taskArray.size()
+            println "No. of Task to stop: " + taskArray.length
             println "Stopping all the current tasks: " 
             
             while(taskArray.length>0 && --count==0) {
