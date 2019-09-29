@@ -1,40 +1,59 @@
 node {
   ws("workspace/${env.JOB_NAME}/${env.BRANCH_NAME}") {
     try {
+    
+      // Maven Artifact Id and Version
+      def ARTIFACT_ID = "simple-rest-service"
+      def VERSION     = "0.0.1.BUILD-SNAPSHOT"
       
-      def mavenImage    = docker.image("maven:3-jdk-11")
-      def m2Volume      = "-v $HOME/.m2:/root/.m2"
-      def imageTag      = "simple-rest-service:0.0.1.BUILD-SNAPSHOT"
-      def ecrUrl        = "https://595233065713.dkr.ecr.us-east-1.amazonaws.com"
-      def ecrToken      = "ecr:us-east-1:5fe9919d-8fe5-42eb-9c4c-e38d3a7c3dbb"
-      def taskDefile    = "file://task-definition-${imageTag}.json"
-      def serviceName   = "simple-rest-service"
-      def taskDefName   = "simple-rest-service-task"
-      def revision       = 2
-      def clusterName   = "cloudnativelab-ecs-cluster"
+      // AWS ECS attributes
+      def AWS_ECS_TASK_DEF_NAME     = "simple-rest-service-task"
+      def AWS_ECS_TASK_DEF_REVISION = 2
+      def AWS_ECS_SERVICE_NAME      = "simple-rest-service"
+      def AWS_ECS_CLUSTER_NAME      = "cloudnativelab-ecs-cluster"
       
-      stage('SCM') {
+      // AWS ECR Connection Token as configured in Jenkins ECR plugin
+      def AWS_ECR_TOKEN = "5fe9919d-8fe5-42eb-9c4c-e38d3a7c3dbb"
+      
+      // ID of credentials in Jenkins as configured in Jenkins project
+      def AWS_JENKINS_CREDENTIAL_ID = "aws_id"  
+      
+      // AWS attributes - might not be required to be changed often   
+      def AWS_REGION  = "us-east-1"
+      def AWS_ACCOUNT = "595233065713" 
+      
+      // Docker image details - might not be required to be changed often    
+      def mavenImage   = "maven:3-jdk-11"
+      def awsCliImage  = "mikesir87/aws-cli"
+      def m2Volume     = "-v $HOME/.m2:/root/.m2"
+      def awsCliVolume = "-v $HOME/.aws:/root/.aws"
+
+      stage('Checkout from SCM') {
+        echo "Checking out latest from git repo"
         checkout scm
       }
 
-      stage('Unit Test') {
-        mavenImage.inside(m2Volume) {
+      stage('Execute Unit Test') {
+        echo "Executing unit test cases"
+        docker.image(mavenImage).inside(m2Volume) {
           sh 'mvn clean test'
         }
       }
   
   // Push reports to sonar
     
-     stage('Install JAR') {
-        mavenImage.inside(m2Volume) {
+      stage('Install JAR') {
+        echo "Installing jar file to local .m2 repository"
+        docker.image(mavenImage).inside(m2Volume) {
           sh 'mvn install'
         }
       }
       
-  // Push jars to nexus
+    // Push jars to nexus
   
-      stage('Build Docker Image') {
-        mavenImage.inside(m2Volume) {
+      stage('Create Docker Image') {
+        echo "Creating docker image"
+        docker.image(mavenImage).inside(m2Volume) {
           sh 'mvn docker:build'    
         }
       }
@@ -43,61 +62,64 @@ node {
   // run the image and health check
   // stop the container
   // remove container
-  
-     // stage('Connect to AWS ECR') {
-       // sh 'aws ecr get-login --region us-east-1 | xargs xargs'   
-     // }
-  
-      stage('Push Image to AWS ECR'){
-        docker.withRegistry(ecrUrl, ecrToken) {
-          docker.image(imageTag).push()
+
+      stage('ECR Docker Push'){
+        echo "docker push to ECR repo"
+        docker.withRegistry("https://${AWS_ACCOUNT}.dkr.ecr.${AWS_REGION}.amazonaws.com", "ecr:${AWS_REGION}:${AWS_ECR_TOKEN}") {
+          docker.image(artifactId + ":" + version).push()
         }    
       }      
  
-
-      stage('Build') {
-        docker.image("mikesir87/aws-cli").inside("-v $HOME/.aws:/root/.aws") {
-          //sh 'aws ecs update-service --cluster cloudnativelab-ecs-cluster --service simple-rest-service --task-definition simple-rest-service-task:2 --force-new-deployment --region us-east-1'                                                                               
-          // sh 'aws s3 ls' 
-                
+      stage('ECS Deploy') {
+        docker.image(awsCliImage).inside(awsCliVolume) {               
           // Example AWS credentials
           withCredentials(
             [[
               $class: 'AmazonWebServicesCredentialsBinding',
               accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-              credentialsId: 'aws_id',  // ID of credentials in Jenkins
+              credentialsId: '${AWS_JENKINS_CREDENTIAL_ID}',  
               secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
             ]]) {
                 
-          echo "deploying"
-          def currentTask = sh (
-            returnStdout: true,
-            script:  "                                                             \
-              aws ecs list-tasks  --cluster ${clusterName}                         \
-                                  --family ${taskDefName}  --region us-east-1      \
-                                  --output text                                    \
-                                  | egrep 'TASKARNS'                               \
-                                  | awk '{print \$2}'                              \
-          "
-        ).trim()
-            echo "Current task is: ${currentTask}"
-
-            sh "aws ecs update-service --cluster ${clusterName} --service ${serviceName} --task-definition ${taskDefName}:${revision} --desired-count 0  --region us-east-1"
-            try {
-              if (currentTask) {
-                def splitted = currentTask.split('\n')
-                for(i=0; i<splitted.length; i++ ){
-                  def task = splitted[ i ]        
-                  println task
-                           
-                  sh "aws ecs stop-task --region us-east-1 --cluster ${clusterName} --task ${task}"
+            echo "Listing ECS task for cluster ${clusterName} with family ${taskDefName}"
+            def currentTask = sh (
+              returnStdout: true,
+              script:  "
+                aws ecs list-tasks  --cluster ${clusterName}                                \
+                                    --family ${taskDefName} --region ${region}              \
+                                    --output text                                           \
+                                    | egrep 'TASKARNS'                                      \
+                                    | awk '{print \$2}'                                     \
+              "
+            ).trim()
+            echo "Stopping all tasks for cluster ${clusterName} for service ${serviceName} with family ${taskDefName}:${taskDefRevision} "
+            sh "aws ecs update-service --cluster ${clusterName}                             \
+                                       --service ${serviceName}                             \
+                                       --task-definition ${taskDefName}:${taskDefRevision}  \
+                                       --desired-count 0                                    \
+                                       --region ${region}" 
+            
+            echo "Current tasks: ${currentTask} "                                                    
+            if (currentTask) {
+              def splitted = currentTask.split('\n')
+              for(i=0; i<splitted.length; i++ ) {
+                def task = splitted[ i ]       
+                try {   
+                  sh "aws ecs stop-task --region ${region}                         
+                                        --cluster ${clusterName} 
+                                        --task ${task}"
+                } catch (ee) {
+                  echo 'Err: Task' + task +' cannot be stopped: ' + ee.toString() 
                 }
               }
-                       
-            } catch (ee) {
-              echo 'Task cannot be stopped: ' + ee.toString()
-            }
-            sh "aws ecs update-service --cluster ${clusterName} --service ${serviceName} --task-definition ${taskDefName}:${revision} --desired-count 4 --region us-east-1"
+            }      
+            
+            echo "Stopping all tasks for cluster ${clusterName} for service ${serviceName} with family ${taskDefName}:${taskDefRevision} "
+            sh "aws ecs update-service --cluster ${clusterName}                            \
+                                       --service ${serviceName}                            \
+                                       --task-definition ${taskDefName}:${taskDefRevision} \
+                                       --desired-count ${desiredCount}                     \
+                                       --region ${region}"
           }
         }
       }      
