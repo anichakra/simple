@@ -6,6 +6,11 @@ node {
   // Maven Artifact Id and Version
   def ARTIFACT_ID = "simple-rest-service"
   def VERSION     = "0.0.1.BUILD-SNAPSHOT"
+  
+  // Sonar configuration attributes
+  def SONAR_TOKEN = "6b6a070e0f61ab0336f516959febdd077afb9007"
+  def SONAR_URL = "http://54.156.215.95:9000"
+  
   // AWS ECS attributes
   def AWS_ECS_CLUSTER_NAME  = "cloudnativelab-ecs-cluster"
   def AWS_ECS_SERVICE_NAME  = "simple-rest-service" 
@@ -25,9 +30,9 @@ node {
   ws("workspace/${env.JOB_NAME}/${env.BRANCH_NAME}") {
     try {      
       // Docker image details - might not be required to be changed often    
-      def MAVEN_IMAGE   = "maven:3-jdk-11"
+      def MAVEN_IMAGE    = "maven:3-jdk-11"
       def AWS_CLI_IMAGE  = "mikesir87/aws-cli"
-      def MAVEN_VOLUME     = "-v $HOME/.m2:/root/.m2"
+      def MAVEN_VOLUME   = "-v $HOME/.m2:/root/.m2"
       def AWS_CLI_VOLUME = "-v $HOME/.aws:/root/.aws"
       
       println "Pipeline started in workspace/" + env.JOB_NAME + "/" + env.BRANCH_NAME
@@ -44,7 +49,13 @@ node {
         }
       }
   
-  // Push reports to sonar
+      stage('Sonar') {
+        println "########## Executing sonar plugin ##########"
+        docker.image(MAVEN_IMAGE).inside(MAVEN_VOLUME) {
+          sh("mvn sonar:sonar -Dsonar.projectKey=" + ARTIFACT_ID + " -Dsonar.host.url=" + SONAR_URL + " -Dsonar.login=" + SONAR_TOKEN)
+        }
+      }
+  
     
      stage('JAR Install') {
         println "########## Installing jar files in local maven repository ##########"

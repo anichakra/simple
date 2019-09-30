@@ -36,7 +36,6 @@ public class NodeController {
             String headerName = itr.next();
             sb.append( headerName).append("=").append(request.getHeader(headerName)).append("\n");
         }
-      
         return sb.toString();
     }
 }
