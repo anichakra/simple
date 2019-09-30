@@ -8,7 +8,7 @@ node {
   def VERSION     = "0.0.1.BUILD-SNAPSHOT"
   
   // Sonar configuration attributes
-  def SONAR_TOKEN = "6b6a070e0f61ab0336f516959febdd077afb9007"
+  def SONAR_TOKEN = "0af30a17a1f3987a83773a9096ef1306957b5bd5"
   def SONAR_URL = "http://54.156.215.95:9000"
   
   // AWS ECS attributes
@@ -49,7 +49,7 @@ node {
         }
       }
   
-      stage('Sonar') {
+      stage('Sonar Analysis') {
         println "########## Executing sonar plugin ##########"
         docker.image(MAVEN_IMAGE).inside(MAVEN_VOLUME) {
           sh("mvn sonar:sonar -Dsonar.projectKey=" + ARTIFACT_ID + " -Dsonar.host.url=" + SONAR_URL + " -Dsonar.login=" + SONAR_TOKEN)
