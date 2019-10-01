@@ -1,5 +1,8 @@
 package me.anichakra.poc.simple.rest;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -8,9 +11,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 public class Application {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws NoSuchAlgorithmException {
         System.setProperty(
-                "node.id", String.valueOf(Math.random()).substring(2, 4));
+                "node.id", String.valueOf(SecureRandom.getInstanceStrong().nextLong()).substring(2, 4));
         SpringApplication.run(Application.class, args);
     }
 
