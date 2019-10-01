@@ -25,11 +25,11 @@ public class DataService {
 
 	public IncomeData getIncome(String account) {
 	    log.debug(account);
-		return new IncomeData(account, "income for loan account: " + account, System.currentTimeMillis(), 1000.999d);
+		return new IncomeData(account, "income: " + account, System.currentTimeMillis(), 1000.999d);
 	}
 
 	public PropertyData getProperty(String account) {
-		return new PropertyData(account, "property for loan account: " + account, System.currentTimeMillis());
+		return new PropertyData(account, "property: " + account, System.currentTimeMillis());
 	}
 
 }
