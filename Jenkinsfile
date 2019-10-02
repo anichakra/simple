@@ -16,8 +16,6 @@ node {
       
   // AWS ECR Connection Token as configured in Jenkins ECR plugin
   def AWS_ECR_TOKEN = "5fe9919d-8fe5-42eb-9c4c-e38d3a7c3dbb"
-
- 
   ws("workspace/${env.JOB_NAME}/${env.BRANCH_NAME}") {
     try {      
       // Docker image details - might not be required to be changed often    
