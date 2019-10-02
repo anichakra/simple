@@ -27,7 +27,7 @@ node {
       def AWS_CLI_VOLUME = "-v $HOME/.aws:/root/.aws"
       def AWS_ECS_SERVICE_NAME  =  ARTIFACT_ID
       def AWS_ECS_TASK_DEF_NAME =  ARTIFACT_ID + "-task"
-      def SONAR_URL = "http://54.156.215.95:9000"
+      def SONAR_URL = "http://cloudnativelab-sonar-alb-1809467691.us-east-1.elb.amazonaws.com"
             
       // ID of credentials in Jenkins as configured in Jenkins project
       def AWS_CREDENTIAL_ID = "aws_id"  
