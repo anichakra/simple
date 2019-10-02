@@ -29,7 +29,7 @@ public class DataService {
 	}
 
 	public PropertyData getProperty(String account) {
-		return new PropertyData(account, "property: " + account, System.currentTimeMillis());
+		return new PropertyData(account, "property----- " + account, System.currentTimeMillis());
 	}
 
 }
