@@ -20,9 +20,7 @@ node {
     try {      
       // Docker image details - might not be required to be changed often    
       def MAVEN_IMAGE    = "maven:3-jdk-11"
-      def AWS_CLI_IMAGE  = "mikesir87/aws-cli"
       def MAVEN_VOLUME   = "-v $HOME/.m2:/root/.m2"
-      def AWS_CLI_VOLUME = "-v $HOME/.aws:/root/.aws"
       def AWS_ECS_SERVICE_NAME  =  ARTIFACT_ID
       def AWS_ECS_TASK_DEF_NAME =  ARTIFACT_ID + "-task"
       def SONAR_URL = "http://cloudnativelab-sonar-alb-1809467691.us-east-1.elb.amazonaws.com"
@@ -30,12 +28,10 @@ node {
       // ID of credentials in Jenkins as configured in Jenkins project
       def AWS_CREDENTIAL_ID = "aws_id"  
       
-  // AWS attributes - might not be required to be changed often   
+      // AWS attributes - might not be required to be changed often   
       def AWS_REGION  = "us-east-1"
       def AWS_ACCOUNT = "595233065713" 
       println "Pipeline started in workspace/" + env.JOB_NAME + "/" + env.BRANCH_NAME
-      
-      
       
       stage('SCM Checkout') {
         println "########## Checking out latest from git repo ##########"
@@ -92,7 +88,7 @@ node {
       stage('ECS Deploy') {
         println "########## Deploying services to ECS ##########"
         def awsCli = docker.build("aws-cli", "./aws")
-        awsCli.inside(AWS_CLI_VOLUME) {
+        awsCli.inside("-v $HOME/.aws:/root/.aws") {
           withCredentials(
             [[
               $class: 'AmazonWebServicesCredentialsBinding',
