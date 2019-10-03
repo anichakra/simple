@@ -4,7 +4,7 @@
     "containerDefinitions": [
         {
             "name": "simple-rest-service-container", 
-            "image": "595233065713.dkr.ecr.us-east-1.amazonaws.com/simple-rest-service:%BUILD_TAG%", 
+            "image": "%AWS_ACCOUNT%.dkr.ecr.us-east-1.amazonaws.com/simple-rest-service:%BUILD_TAG%", 
             "portMappings": [
                 {
                     "containerPort": 8080, 
@@ -18,7 +18,7 @@
     "requiresCompatibilities": [
         "FARGATE"
     ], 
-    "cpu": "1024", 
-    "memory": "2048",
-    "executionRoleArn": "arn:aws:iam::595233065713:role/ecsTaskExecutionRole"
+    "cpu": "512", 
+    "memory": "1024",
+    "executionRoleArn": "arn:aws:iam::%AWS_ACCOUNT%:role/ecsTaskExecutionRole"
 }

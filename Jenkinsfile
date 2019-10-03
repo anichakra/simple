@@ -77,7 +77,7 @@ node {
         }
       }
  
-      stage('Docker Image Push'){
+      stage('Docker Image ECR Push'){
         println "########## Pushing docker images in ECR repository ##########"
         docker.withRegistry("https://" + AWS_ACCOUNT + ".dkr.ecr." + AWS_REGION + ".amazonaws.com", 
         "ecr:" + AWS_REGION + ":" + AWS_ECR_TOKEN) {
@@ -100,7 +100,9 @@ node {
             sh("sed -e 's;%BUILD_TAG%;" + VERSION + ";g'                             \
                      aws/task-definition.json >                                      \
                      aws/task-definition-" + VERSION + ".json")
-        
+            sh("sed -e 's;%AWS_ACCOUNT%;" + AWS_ACCOUNT + ";g'                             \
+                    aws/task-definition-" + VERSION + ".json >                                      \
+                     aws/task-definition-" + VERSION + ".json")
             def currentTaskDefCmd = "aws ecs describe-task-definition --task-definition " + AWS_ECS_TASK_DEF_NAME    \
                 + " | egrep 'revision' | tr ',' ' ' | awk '{print \$2}'"
             def currTaskDef = sh (returnStdout: true, script: currentTaskDefCmd).trim()
