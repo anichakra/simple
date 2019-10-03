@@ -17,19 +17,19 @@ public class DataService {
 	public List<AssetData> getAsset(String account) {
 		List<AssetData> assetDataList = new ArrayList<AssetData>();
 		String node = System.getProperty("node.id") ;
-		assetDataList.add(new AssetData(account, "asset:" + node + " " + account, System.currentTimeMillis()));
-		assetDataList.add(new AssetData(account, "asset:" + node + " " + account, System.currentTimeMillis()));
-		assetDataList.add(new AssetData(account, "asset:" + node + " " + account, System.currentTimeMillis()));
+		assetDataList.add(new AssetData(account, "asset-" + node + " " + account, System.currentTimeMillis()));
+		assetDataList.add(new AssetData(account, "asset-" + node + " " + account, System.currentTimeMillis()));
+		assetDataList.add(new AssetData(account, "asset-" + node + " " + account, System.currentTimeMillis()));
 		return assetDataList;
 	}
 
 	public IncomeData getIncome(String account) {
 	    log.debug(account);
-		return new IncomeData(account, "income: " + account, System.currentTimeMillis(), 1000.999d);
+		return new IncomeData(account, "income- " + account, System.currentTimeMillis(), 1000.999d);
 	}
 
 	public PropertyData getProperty(String account) {
-		return new PropertyData(account, "property: " + account, System.currentTimeMillis());
+		return new PropertyData(account, "property- " + account, System.currentTimeMillis());
 	}
 
 }
