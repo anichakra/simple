@@ -26,9 +26,10 @@ public class NodeController {
     @GetMapping("/info")
     @ResponseBody
     public String getNodeId(HttpServletRequest request) {
-        return System.getProperty("node.id") + "-" + new Faker(Locale.ENGLISH).artist() + ":"  + getAddress(request);
+        return System.getProperty("node.id") + "-" + new Faker(Locale.ENGLISH).gameOfThrones().character() + ":"  + getAddress(request);
     }
 
+    
     private String getAddress(HttpServletRequest request) {
         return request.getLocalAddr();
     }
