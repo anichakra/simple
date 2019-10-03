@@ -83,7 +83,8 @@ node {
         if(env.BRANCH_NAME == DEV_BRANCH_NAME) {
           println "########## Creating docker images ##########"
           docker.image(MAVEN_IMAGE).inside(MAVEN_VOLUME) {
-          sh('mvn docker:build') 
+            sh('mvn docker:build') 
+          }
         }
       }
  
