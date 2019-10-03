@@ -2,6 +2,7 @@ package me.anichakra.poc.simple.rest.controller;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import com.github.javafaker.Faker;
 
 @RestController
 @RequestMapping("/node")
@@ -23,7 +25,9 @@ public class NodeController {
     @GetMapping("/info")
     @ResponseBody
     public String getNodeId(HttpServletRequest request) {
-        return System.getProperty("node.id") + "-" + getAddress(request);
+        Faker faker = new Faker(Locale.ENGLISH);
+
+        return System.getProperty("node.id") + "-" + faker.artist() + ":"  + getAddress(request);
     }
 
     private String getAddress(HttpServletRequest request) {
