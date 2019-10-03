@@ -36,12 +36,6 @@ node {
       def AWS_ACCOUNT = "595233065713" 
       println "Pipeline started in workspace/" + env.JOB_NAME + "/" + env.BRANCH_NAME
       
-      stage('first') {
-            agent { label 'master' }
-            steps {
-               sh "printenv | sort"
-            }
-      }
       stage('SCM Checkout') {
         println "########## Checking out latest from git repo ##########"
         checkout scm
