@@ -21,6 +21,7 @@ node {
   
   ws("workspace/${env.JOB_NAME}/${env.BRANCH_NAME}") {
     try {      
+      sh('printenv | sort')
       // Docker image details - might not be required to be changed often    
       def MAVEN_IMAGE    = "maven:3-jdk-11"
       def MAVEN_VOLUME   = "-v $HOME/.m2:/root/.m2"
@@ -35,6 +36,12 @@ node {
       def AWS_ACCOUNT = "595233065713" 
       println "Pipeline started in workspace/" + env.JOB_NAME + "/" + env.BRANCH_NAME
       
+      stage('first') {
+            agent { label 'master' }
+            steps {
+               sh "printenv | sort"
+            }
+      }
       stage('SCM Checkout') {
         println "########## Checking out latest from git repo ##########"
         checkout scm
