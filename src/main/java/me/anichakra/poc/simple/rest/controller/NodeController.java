@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.github.javafaker.Faker;
 
 @RestController
@@ -25,9 +26,7 @@ public class NodeController {
     @GetMapping("/info")
     @ResponseBody
     public String getNodeId(HttpServletRequest request) {
-        Faker faker = new Faker(Locale.ENGLISH);
-
-        return System.getProperty("node.id") + "-" + faker.artist() + ":"  + getAddress(request);
+        return System.getProperty("node.id") + "-" + new Faker(Locale.ENGLISH).artist() + ":"  + getAddress(request);
     }
 
     private String getAddress(HttpServletRequest request) {

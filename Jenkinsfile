@@ -13,7 +13,10 @@ node {
 
   // AWS ECR Connection Token as configured in Jenkins ECR plugin
   def AWS_ECR_TOKEN = "5fe9919d-8fe5-42eb-9c4c-e38d3a7c3dbb"
-
+  
+  // Whether to use the updated task definition and make a new revision
+  def UPDATE_AWS_ECS_TASKDEF_REV = true
+  
   // AWS ECS attributes
   def AWS_ECS_CLUSTER_NAME  = "cloudnativelab-ecs-cluster"
   def AWS_ECS_TASK_COUNT    = 3
@@ -109,14 +112,8 @@ node {
               credentialsId: AWS_CREDENTIAL_ID,  
               secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
             ]]) {
-            def taskDefile = "file://aws/task-definition-" + VERSION + ".json"
-            sh("sed -e 's;%BUILD_TAG%;" + VERSION + ";g'                             \
-                     aws/task-definition.json >                                      \
-                     aws/task-definition-" + "tmp" + ".json")
-            sh("sed -e 's;%AWS_ACCOUNT%;" + AWS_ACCOUNT + ";g'                             \
-                    aws/task-definition-" + "tmp" + ".json >                                      \
-                     aws/task-definition-" + VERSION + ".json")
-            def currentTaskDefCmd = "aws ecs describe-task-definition --task-definition " + AWS_ECS_TASK_DEF_NAME    \
+         
+            def currentTaskDefCmd = "aws ecs describe-task-definition --task-definition " + AWS_ECS_TASK_DEF_NAME \
                 + " | egrep 'revision' | tr ',' ' ' | awk '{print \$2}'"
             def currTaskDef = sh (returnStdout: true, script: currentTaskDefCmd).trim()
           
@@ -136,7 +133,7 @@ node {
                                         + " --desired-count 0"                          \
                                         + " --region "          + AWS_REGION)          
             }
-            
+  
             while(currentTasks) {    
               def t = currentTasks.split("\n") 
               String[] taskArray = t as String[]
@@ -155,9 +152,6 @@ node {
                   println "Task cannot be stopped: " + ee.toString()
                 }
               }
-              // Register the new [TaskDefinition]
-               sh("aws ecs register-task-definition --region " + AWS_REGION + " --family " + AWS_ECS_TASK_DEF_NAME + " --cli-input-json " + taskDefile)
-             
                 
               currentTasks = sh(returnStdout: true, script: taskListCmd).trim()
               println "Current Tasks: " + currentTasks  
@@ -168,12 +162,32 @@ node {
                 println "Tasks Array: " + taskArray  
               }
             }
-              // Get the last registered [TaskDefinition#revision]
-           def taskRevisionCmd = "aws ecs describe-task-definition --region " + AWS_REGION + " --task-definition " + AWS_ECS_TASK_DEF_NAME     \
-                                          +   " | egrep 'revision' | tr ',' ' ' | awk '{print \$2}'"
-           def taskRevision = sh (returnStdout: true, script: taskRevisionCmd).trim()
+            
+                     
+            if(UPDATE_AWS_ECS_TASKDEF_REV) {
+              // Creating task definition file from workspace with a version
+              sh("sed -e 's;%BUILD_TAG%;" + VERSION + ";g'       \
+                  aws/task-definition.json >                \
+                  aws/task-definition-" + "tmp" + ".json")
+              sh("sed -e 's;%AWS_ACCOUNT%;" + AWS_ACCOUNT + ";g' \
+                  aws/task-definition-" + "tmp" + ".json >   \
+                  aws/task-definition-" + VERSION + ".json")
+                              
+              // Register the new [TaskDefinition]
+              sh("aws ecs register-task-definition --region " + AWS_REGION \
+                                             + " --family " + AWS_ECS_TASK_DEF_NAME \
+                                             + " --cli-input-json file://aws/task-definition-" + VERSION + ".json") 
+            }
+            
+            // Get the last registered [TaskDefinition#revision]
+            def taskRevisionCmd = "aws ecs describe-task-definition --region " + AWS_REGION \
+                                                                + " --task-definition " + AWS_ECS_TASK_DEF_NAME \
+                                                                +   " | egrep 'revision' | tr ',' ' ' | awk '{print \$2}'"
+                                                                
+            def taskRevision = sh (returnStdout: true, script: taskRevisionCmd).trim()
         
             println "Updating ECS cluster"
+                     
             sh ("aws ecs update-service --cluster "         + AWS_ECS_CLUSTER_NAME  \
                                     + " --service "         + AWS_ECS_SERVICE_NAME  \
                                     + " --task-definition " + AWS_ECS_TASK_DEF_NAME \
