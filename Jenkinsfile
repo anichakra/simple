@@ -9,13 +9,16 @@ node {
   
   // Sonar configuration attributes
   def SONAR_TOKEN = "0af30a17a1f3987a83773a9096ef1306957b5bd5"
-  
+  def SONAR_URL = "http://cloudnativelab-sonar-alb-1809467691.us-east-1.elb.amazonaws.com"    
+
+  // AWS ECR Connection Token as configured in Jenkins ECR plugin
+  def AWS_ECR_TOKEN = "5fe9919d-8fe5-42eb-9c4c-e38d3a7c3dbb"
+
   // AWS ECS attributes
   def AWS_ECS_CLUSTER_NAME  = "cloudnativelab-ecs-cluster"
   def AWS_ECS_TASK_COUNT    = 3
-      
-  // AWS ECR Connection Token as configured in Jenkins ECR plugin
-  def AWS_ECR_TOKEN = "5fe9919d-8fe5-42eb-9c4c-e38d3a7c3dbb"
+  
+  
   ws("workspace/${env.JOB_NAME}/${env.BRANCH_NAME}") {
     try {      
       // Docker image details - might not be required to be changed often    
@@ -23,7 +26,6 @@ node {
       def MAVEN_VOLUME   = "-v $HOME/.m2:/root/.m2"
       def AWS_ECS_SERVICE_NAME  =  ARTIFACT_ID
       def AWS_ECS_TASK_DEF_NAME =  ARTIFACT_ID + "-task"
-      def SONAR_URL = "http://cloudnativelab-sonar-alb-1809467691.us-east-1.elb.amazonaws.com"
             
       // ID of credentials in Jenkins as configured in Jenkins project
       def AWS_CREDENTIAL_ID = "aws_id"  
@@ -99,9 +101,9 @@ node {
             def taskDefile = "file://aws/task-definition-" + VERSION + ".json"
             sh("sed -e 's;%BUILD_TAG%;" + VERSION + ";g'                             \
                      aws/task-definition.json >                                      \
-                     aws/task-definition-" + VERSION + ".json")
+                     aws/task-definition-" + "tmp" + ".json")
             sh("sed -e 's;%AWS_ACCOUNT%;" + AWS_ACCOUNT + ";g'                             \
-                    aws/task-definition-" + VERSION + ".json >                                      \
+                    aws/task-definition-" + "tmp" + ".json >                                      \
                      aws/task-definition-" + VERSION + ".json")
             def currentTaskDefCmd = "aws ecs describe-task-definition --task-definition " + AWS_ECS_TASK_DEF_NAME    \
                 + " | egrep 'revision' | tr ',' ' ' | awk '{print \$2}'"
