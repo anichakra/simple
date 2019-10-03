@@ -17,7 +17,11 @@ node {
   // AWS ECS attributes
   def AWS_ECS_CLUSTER_NAME  = "cloudnativelab-ecs-cluster"
   def AWS_ECS_TASK_COUNT    = 3
-  
+  def DEV_BRANCH_NAME = "master"
+  def UAT_BRANCH_NAME = "uat"
+  if  (env.BRANCH_NAME == UAT_BRANCH_NAME) {
+    AWS_ECS_CLUSTER_NAME  = "cloudnativelab-ecs-cluster"
+  } 
   
   ws("workspace/${env.JOB_NAME}/${env.BRANCH_NAME}") {
     try {      
@@ -64,28 +68,33 @@ node {
   //    }
    // }
     
-     stage('JAR Install') {
-        println "########## Installing jar files in local maven repository ##########"
-        docker.image(MAVEN_IMAGE).inside(MAVEN_VOLUME) {
-          sh('mvn install')
+      stage('JAR Creating') {
+        if(env.BRANCH_NAME == DEV_BRANCH_NAME) {
+          println "########## Installing jar files in local maven repository ##########"
+          docker.image(MAVEN_IMAGE).inside(MAVEN_VOLUME) {
+            sh('mvn package')
+          }
         }
       }
       
       // Push jars to nexus
   
       stage('Docker Image Creation') {
-        println "########## Creating docker images ##########"
-        docker.image(MAVEN_IMAGE).inside(MAVEN_VOLUME) {
+        if(env.BRANCH_NAME == DEV_BRANCH_NAME) {
+          println "########## Creating docker images ##########"
+          docker.image(MAVEN_IMAGE).inside(MAVEN_VOLUME) {
           sh('mvn docker:build') 
         }
       }
  
       stage('Docker Image ECR Push'){
-        println "########## Pushing docker images in ECR repository ##########"
-        docker.withRegistry("https://" + AWS_ACCOUNT + ".dkr.ecr." + AWS_REGION + ".amazonaws.com", 
-        "ecr:" + AWS_REGION + ":" + AWS_ECR_TOKEN) {
-          docker.image(ARTIFACT_ID+":"+VERSION).push()
-        }    
+        if(env.BRANCH_NAME == DEV_BRANCH_NAME) {
+          println "########## Pushing docker images in ECR repository ##########"
+          docker.withRegistry("https://" + AWS_ACCOUNT + ".dkr.ecr." + AWS_REGION + ".amazonaws.com", 
+                             "ecr:" + AWS_REGION + ":" + AWS_ECR_TOKEN) {
+            docker.image(ARTIFACT_ID+":"+VERSION).push()
+          }    
+        }
       }      
  
       stage('ECS Deploy') {
