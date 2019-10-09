@@ -47,7 +47,6 @@ node {
       def MAVEN_IMAGE    = "maven:3.6.2-amazoncorretto-11"
       def MAVEN_VOLUME   = "-v /home/ec2-user/.m2:/var/maven/.m2 -e MAVEN_CONFIG=/var/maven/.m2"
       
-    
       sh('printenv | sort')
       println "Pipeline started in workspace/" + env.JOB_NAME + "/" + env.BRANCH_NAME
       stage('SCM Checkout') {
