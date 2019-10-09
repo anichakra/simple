@@ -49,7 +49,6 @@ node {
     
       sh('printenv | sort')
       println "Pipeline started in workspace/" + env.JOB_NAME + "/" + env.BRANCH_NAME
-      
       stage('SCM Checkout') {
         println "########## Checking out latest from git repo ##########"
         checkout scm
