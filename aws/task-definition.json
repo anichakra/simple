@@ -22,3 +22,4 @@
     "memory": "2048",
     "executionRoleArn": "arn:aws:iam::%AWS_ACCOUNT%:role/ecsTaskExecutionRole"
 }
+
