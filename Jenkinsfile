@@ -41,7 +41,6 @@ node {
     AWS_ECS_CLUSTER_NAME  = "cloudnativelab-ecs-prd-cluster-prd"
   }
   
-  
   ws("workspace/${env.JOB_NAME}/${env.BRANCH_NAME}") {
     try {      
       // Docker image details - might not be required to be changed often    
