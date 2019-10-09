@@ -6,46 +6,47 @@ node {
   // Maven Artifact Id and Version
   def ARTIFACT_ID = "simple-rest-service"
   def VERSION     = "0.0.1.BUILD-SNAPSHOT"
-  
   // Sonar configuration attributes
   def SONAR_TOKEN = "0af30a17a1f3987a83773a9096ef1306957b5bd5"
   def SONAR_URL = "http://cloudnativelab-sonar-alb-1809467691.us-east-1.elb.amazonaws.com"    
-
-  // AWS ECR Connection Token as configured in Jenkins ECR plugin
-  def AWS_ECR_TOKEN = "5fe9919d-8fe5-42eb-9c4c-e38d3a7c3dbb"
-  
-  // Whether to use the updated task definition and make a new revision
+   // Whether to use the updated task definition and make a new revision
   def UPDATE_AWS_ECS_TASKDEF_REV = true
   
   // AWS ECS attributes
   def AWS_ECS_CLUSTER_NAME  = "cloudnativelab-ecs-cluster"
   def AWS_ECS_TASK_COUNT    = 3
+  
+  // ECS Service and Task Definition Name
+  def AWS_ECS_SERVICE_NAME  =  ARTIFACT_ID
+  def AWS_ECS_TASK_DEF_NAME =  ARTIFACT_ID + "-task"
+            
+  // ID of credentials in Jenkins as configured in Jenkins project
+  def AWS_CREDENTIAL_ID = "aws_id"  
+      
+  // AWS attributes - might not be required to be changed often   
+  def AWS_REGION  = "us-east-1"
+  def AWS_ACCOUNT = "595233065713" 
+  
+  // Branch based deviation for non-dev branches in a multibranch pipeline 
   def DEV_BRANCH_NAME = "master"
   def UAT_BRANCH_NAME = "uat"
   def PRD_BRANCH_NAME = "prd"
   def SIT_BRANCH_NAME = "sit"
-  
+  //Provide/override all required values based on environment
   if  (env.BRANCH_NAME == UAT_BRANCH_NAME) {
     AWS_ECS_CLUSTER_NAME  = "cloudnativelab-ecs-cluster"
   } else if (env.BRANCH_NAME == PRD_BRANCH_NAME) {
     AWS_ECS_CLUSTER_NAME  = "cloudnativelab-ecs-prd-cluster"
   }
   
+  
   ws("workspace/${env.JOB_NAME}/${env.BRANCH_NAME}") {
     try {      
-      sh('printenv | sort')
       // Docker image details - might not be required to be changed often    
       def MAVEN_IMAGE    = "maven:3-jdk-11"
       def MAVEN_VOLUME   = "-v $HOME/.m2:/root/.m2"
-      def AWS_ECS_SERVICE_NAME  =  ARTIFACT_ID
-      def AWS_ECS_TASK_DEF_NAME =  ARTIFACT_ID + "-task"
-            
-      // ID of credentials in Jenkins as configured in Jenkins project
-      def AWS_CREDENTIAL_ID = "aws_id"  
-      
-      // AWS attributes - might not be required to be changed often   
-      def AWS_REGION  = "us-east-1"
-      def AWS_ACCOUNT = "595233065713" 
+    
+      sh('printenv | sort')
       println "Pipeline started in workspace/" + env.JOB_NAME + "/" + env.BRANCH_NAME
       
       stage('SCM Checkout') {
