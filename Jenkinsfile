@@ -75,7 +75,7 @@ node {
         if(env.BRANCH_NAME == DEV_BRANCH_NAME) {
           println "########## Installing jar files in local maven repository ##########"
           docker.image(MAVEN_IMAGE).inside(MAVEN_VOLUME) {
-            sh('mvn package')
+            sh('mvn clean install')
           }
         }
       }
