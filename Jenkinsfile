@@ -22,9 +22,14 @@ node {
   def AWS_ECS_TASK_COUNT    = 3
   def DEV_BRANCH_NAME = "master"
   def UAT_BRANCH_NAME = "uat"
+  def PRD_BRANCH_NAME = "prd"
+  def SIT_BRANCH_NAME = "sit"
+  
   if  (env.BRANCH_NAME == UAT_BRANCH_NAME) {
     AWS_ECS_CLUSTER_NAME  = "cloudnativelab-ecs-cluster"
-  } 
+  } else if (env.BRANCH_NAME == PRD_BRANCH_NAME) {
+    AWS_ECS_CLUSTER_NAME  = "cloudnativelab-ecs-prd-cluster"
+  }
   
   ws("workspace/${env.JOB_NAME}/${env.BRANCH_NAME}") {
     try {      
@@ -48,6 +53,13 @@ node {
         checkout scm
       }
 
+     stage('Sonar Analysis') {
+        println "########## Executing sonar plugin ##########"
+        docker.image(MAVEN_IMAGE).inside(MAVEN_VOLUME) {
+          sh("mvn sonar:sonar -Dsonar.projectKey=" + ARTIFACT_ID + " -Dsonar.host.url=" + SONAR_URL + " -Dsonar.login=" + SONAR_TOKEN)
+        }
+      }
+
       stage('Unit Testing') {
         println "########## Executing unit test cases ##########"
         docker.image(MAVEN_IMAGE).inside(MAVEN_VOLUME) {
@@ -55,13 +67,7 @@ node {
         }
       }
   
-      stage('Sonar Analysis') {
-        println "########## Executing sonar plugin ##########"
-        docker.image(MAVEN_IMAGE).inside(MAVEN_VOLUME) {
-          sh("mvn sonar:sonar -Dsonar.projectKey=" + ARTIFACT_ID + " -Dsonar.host.url=" + SONAR_URL + " -Dsonar.login=" + SONAR_TOKEN)
-        }
-      }
-      
+       
  //   stage("Sonar Quality Gate"){
    //   timeout(time: 1, unit: 'HOURS') { // Just in case something goes wrong, pipeline will be killed after a timeout
   //      def qg = waitForQualityGate() // Reuse taskId previously collected by withSonarQubeEnv
@@ -95,7 +101,7 @@ node {
         if(env.BRANCH_NAME == DEV_BRANCH_NAME) {
           println "########## Pushing docker images in ECR repository ##########"
           docker.withRegistry("https://" + AWS_ACCOUNT + ".dkr.ecr." + AWS_REGION + ".amazonaws.com", 
-                             "ecr:" + AWS_REGION + ":" + AWS_ECR_TOKEN) {
+                             "ecr:" + AWS_REGION + ":" + AWS_CREDENTIAL_ID) {
             docker.image(ARTIFACT_ID+":"+VERSION).push()
           }    
         }
@@ -103,7 +109,8 @@ node {
  
       stage('ECS Deploy') {
         println "########## Deploying services to ECS ##########"
-        def awsCli = docker.build("aws-cli", "./aws")
+        def awsCli = docker.image("aws-cli:latest")
+        if(!awsCli) awsCli = docker.build("aws-cli", "./aws")
         awsCli.inside("-v $HOME/.aws:/root/.aws") {
           withCredentials(
             [[
