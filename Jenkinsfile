@@ -27,16 +27,16 @@ node {
   def AWS_REGION  = "us-east-1"
   def AWS_ACCOUNT = "595233065713" 
   
-  // Branch based deviation for non-dev branches in a multibranch pipeline 
+  // Branch names of the repository for a multibranch pipeline 
   def DEV_BRANCH_NAME = "master"
   def UAT_BRANCH_NAME = "uat"
   def PRD_BRANCH_NAME = "prd"
   def SIT_BRANCH_NAME = "sit"
   //Provide/override all required values based on environment
   if  (env.BRANCH_NAME == UAT_BRANCH_NAME) {
-    AWS_ECS_CLUSTER_NAME  = "cloudnativelab-ecs-cluster"
+    AWS_ECS_CLUSTER_NAME  = "cloudnativelab-ecs-cluster-uat"
   } else if (env.BRANCH_NAME == PRD_BRANCH_NAME) {
-    AWS_ECS_CLUSTER_NAME  = "cloudnativelab-ecs-prd-cluster"
+    AWS_ECS_CLUSTER_NAME  = "cloudnativelab-ecs-prd-cluster-prd"
   }
   
   
