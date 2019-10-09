@@ -46,6 +46,7 @@ node {
       // Docker image details - might not be required to be changed often    
       def MAVEN_IMAGE    = "maven:3-jdk-11"
       def MAVEN_VOLUME   = "-v $HOME/.m2:/root/.m2"
+      
     
       sh('printenv | sort')
       println "Pipeline started in workspace/" + env.JOB_NAME + "/" + env.BRANCH_NAME
