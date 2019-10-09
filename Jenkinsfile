@@ -9,7 +9,8 @@ node {
   // Sonar configuration attributes
   def SONAR_TOKEN = "0af30a17a1f3987a83773a9096ef1306957b5bd5"
   def SONAR_URL = "http://cloudnativelab-sonar-alb-1809467691.us-east-1.elb.amazonaws.com"    
-   // Whether to use the updated task definition and make a new revision
+  
+  // Whether to use the updated task definition and make a new revision
   def UPDATE_AWS_ECS_TASKDEF_REV = true
   
   // AWS ECS attributes
@@ -32,6 +33,7 @@ node {
   def UAT_BRANCH_NAME = "uat"
   def PRD_BRANCH_NAME = "prd"
   def SIT_BRANCH_NAME = "sit"
+  
   //Provide/override all required values based on environment
   if  (env.BRANCH_NAME == UAT_BRANCH_NAME) {
     AWS_ECS_CLUSTER_NAME  = "cloudnativelab-ecs-cluster-uat"
@@ -62,14 +64,14 @@ node {
       }
   
        
- //   stage("Sonar Quality Gate"){
-   //   timeout(time: 1, unit: 'HOURS') { // Just in case something goes wrong, pipeline will be killed after a timeout
+  //   stage("Sonar Quality Gate"){
+  //   timeout(time: 1, unit: 'HOURS') { // Just in case something goes wrong, pipeline will be killed after a timeout
   //      def qg = waitForQualityGate() // Reuse taskId previously collected by withSonarQubeEnv
   //      if (qg.status != 'OK') {
   //        error "Pipeline aborted due to quality gate failure: ${qg.status}"
   //      }
   //    }
-   // }
+  // }
     
       stage('JAR Creating') {
         if(env.BRANCH_NAME == DEV_BRANCH_NAME) {
