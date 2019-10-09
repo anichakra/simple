@@ -53,13 +53,6 @@ node {
         checkout scm
       }
 
-     stage('Sonar Analysis') {
-        println "########## Executing sonar plugin ##########"
-        docker.image(MAVEN_IMAGE).inside(MAVEN_VOLUME) {
-          sh("mvn sonar:sonar -Dsonar.projectKey=" + ARTIFACT_ID + " -Dsonar.host.url=" + SONAR_URL + " -Dsonar.login=" + SONAR_TOKEN)
-        }
-      }
-
       stage('Unit Testing') {
         println "########## Executing unit test cases ##########"
         docker.image(MAVEN_IMAGE).inside(MAVEN_VOLUME) {
@@ -85,6 +78,14 @@ node {
           }
         }
       }
+      
+      stage('Sonar Analysis') {
+        println "########## Executing sonar plugin ##########"
+        docker.image(MAVEN_IMAGE).inside(MAVEN_VOLUME) {
+          sh("mvn sonar:sonar -Dsonar.projectKey=" + ARTIFACT_ID + " -Dsonar.host.url=" + SONAR_URL + " -Dsonar.login=" + SONAR_TOKEN)
+        }
+      }
+      
       
       // Push jars to nexus
   
