@@ -44,7 +44,7 @@ node {
   ws("workspace/${env.JOB_NAME}/${env.BRANCH_NAME}") {
     try {      
       // Docker image details - might not be required to be changed often    
-      def MAVEN_IMAGE    = "3.6.2-amazoncorretto-11"
+      def MAVEN_IMAGE    = "maven-jdk-11-amazon"
       def MAVEN_VOLUME   = "-v ~/.m2:/var/maven/.m2 -e MAVEN_CONFIG=/var/maven/.m2"
       
     
