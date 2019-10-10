@@ -81,6 +81,7 @@ node {
       }
             
     } catch(e) {
+    
       println "Err: Incremental Build failed with Error: " + e.toString()
       currentBuild.result = 'FAILED'
       throw e
