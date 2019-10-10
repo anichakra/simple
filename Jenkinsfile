@@ -45,7 +45,7 @@ node {
     try {      
       // Docker image details - might not be required to be changed often    
       def MAVEN_IMAGE    = "maven:3.6.2-amazoncorretto-11"
-      def MAVEN_VOLUME   = "maven-repo:/root/.m2"
+      def MAVEN_VOLUME   = "-v maven-repo:/root/.m2"
       
       sh('printenv | sort')
       println "Pipeline started in workspace/" + env.JOB_NAME + "/" + env.BRANCH_NAME
