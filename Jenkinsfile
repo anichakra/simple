@@ -73,7 +73,7 @@ node {
       stage('JAR Creating') {
         if(env.BRANCH_NAME == DEV_BRANCH_NAME) {
           println "########## Installing jar files in local maven repository ##########"
-          docker.image("maven:3.6.2-amazoncorretto-11").inside("-v \"$PWD\":/usr/src/mymaven -v \"$HOME/.m2\":/root/.m2 -v \"$PWD/target:/usr/src/mymaven/target\" -w /usr/src/mymaven") {
+          docker.image("maven:3.6.2-amazoncorretto-11").inside("-v maven-repo:/root/.m2") {
             sh('mvn clean install')
           }
          // sh 'docker run -it --rm  maven:3.6.2-amazoncorretto-11 mvn clean package' 
@@ -90,6 +90,8 @@ node {
         println "Cleaning up"
        // deleteDir()
       }          
+      
+      
     }
   }
 }
