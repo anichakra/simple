@@ -76,7 +76,10 @@ node {
       stage('JAR Creating') {
         if(env.BRANCH_NAME == DEV_BRANCH_NAME) {
           println "########## Installing jar files in local maven repository ##########"
+        
+          
           docker.image(MAVEN_IMAGE).inside(MAVEN_VOLUME) {
+            sh("mvn help:evaluate -Dexpression=settings.localRepository")
             sh('mvn clean install -Duser.home=/var/maven')
           }
         }
