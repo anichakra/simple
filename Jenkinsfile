@@ -84,40 +84,33 @@ node {
       }
       
       stage('JAR Install') {
-        if(env.BRANCH_NAME == DEV_BRANCH_NAME) {
-          println "########## Installing jar files in local maven repository ##########"
-          docker.image(MAVEN_IMAGE).inside(MAVEN_VOLUME) {
-            sh("mvn install " + MAVEN_ARG)
-          }
+        println "########## Installing jar files in local maven repository ##########"        
+        docker.image(MAVEN_IMAGE).inside(MAVEN_VOLUME) {
+          sh("mvn install " + MAVEN_ARG)
         }
       }
                 
       stage('JAR Upload') {
-        if(env.BRANCH_NAME == DEV_BRANCH_NAME) {
-          println "########## Deploying jar files to Nexus ##########"
-          docker.image(MAVEN_IMAGE).inside(MAVEN_VOLUME) {
-            sh("mvn deploy " + MAVEN_ARG)
-          }
+        println "########## Deploying jar files to Nexus ##########"
+        docker.image(MAVEN_IMAGE).inside(MAVEN_VOLUME) {
+          sh("mvn deploy " + MAVEN_ARG)
         }
       }      
         
       stage('Docker Image Creation') {
-        if(env.BRANCH_NAME == DEV_BRANCH_NAME) {
-          println "########## Creating docker images ##########"
-          docker.image(MAVEN_IMAGE).inside(MAVEN_VOLUME) {
-            sh('mvn docker:build') 
-          }
+        println "########## Creating docker images ##########"
+        docker.image(MAVEN_IMAGE).inside(MAVEN_VOLUME) {
+          sh('mvn docker:build') 
         }
       }
  
       stage('Docker Image ECR Push'){
-        if(env.BRANCH_NAME == DEV_BRANCH_NAME) {
-          println "########## Pushing docker images in ECR repository ##########"
-          docker.withRegistry("https://" + AWS_ACCOUNT + ".dkr.ecr." + AWS_REGION + ".amazonaws.com", 
-                             "ecr:" + AWS_REGION + ":" + AWS_CREDENTIAL_ID) {
-            docker.image(ARTIFACT_ID+":"+VERSION).push()
-          }    
+        println "########## Pushing docker images in ECR repository ##########"
+        docker.withRegistry("https://" + AWS_ACCOUNT + ".dkr.ecr." + AWS_REGION + ".amazonaws.com", 
+                           "ecr:" + AWS_REGION + ":" + AWS_CREDENTIAL_ID) {
+          docker.image(ARTIFACT_ID+":"+VERSION).push()
         }
+        sh("docker rmi " + ARTIFACT_ID + ":" + VERSION)   
       }      
  
       stage('ECS Deploy') {
@@ -219,6 +212,7 @@ node {
                                     + ":"                   + taskRevision  \
                                     + " --desired-count "   + AWS_ECS_TASK_COUNT    \
                                     + " --region "          + AWS_REGION)
+          
           }
         }
       }      
@@ -230,7 +224,6 @@ node {
       stage('Cleanup') {
         println "Cleaning up"
         deleteDir()
-        sh("docker rmi " + ARTIFACT_ID + ":" + VERSION)
       }          
     }
   }
