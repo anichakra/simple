@@ -47,7 +47,7 @@ node {
       // Docker image details - might not be required to be changed often    
       def MAVEN_IMAGE  = "maven:3.6.2-amazoncorretto-11"
       def MAVEN_HOME   = "/var/maven"
-      def MAVEN_VOLUME = "-v /home/ec2-user/.m2:" +MAVEN_HOME + " -e MAVEN_CONFIG="+MAVEN_HOME + "/.m2"
+      def MAVEN_VOLUME = "-v /home/ec2-user/.m2:" +MAVEN_HOME + "./m2" + " -e MAVEN_CONFIG="+MAVEN_HOME + "/.m2"
       
       
       sh('printenv | sort')
