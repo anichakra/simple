@@ -85,7 +85,7 @@ node {
         if(env.BRANCH_NAME == DEV_BRANCH_NAME) {
           println "########## Deploying jar files to Nexus ##########"
           docker.image(MAVEN_IMAGE).inside(MAVEN_VOLUME) {
-            sh("mvn deplouy " + MAVEN_ARG)
+            sh("mvn deploy " + MAVEN_ARG)
           }
         }
       }
