@@ -55,7 +55,7 @@ node {
         checkout scm
       }
 
-      stage('Unit Testing') {
+      stage('Unit Test') {
         println "########## Executing unit test cases ##########"
         docker.image(MAVEN_IMAGE).inside(MAVEN_VOLUME) {
           sh("mvn clean test -Duser.home=/var/maven")
@@ -73,7 +73,7 @@ node {
   
   
     
-      stage('JAR Creating') {
+      stage('JAR Install') {
         if(env.BRANCH_NAME == DEV_BRANCH_NAME) {
           println "########## Installing jar files in local maven repository ##########"
         
@@ -85,6 +85,19 @@ node {
         }
       }
             
+          
+      stage('JAR Upload') {
+        if(env.BRANCH_NAME == DEV_BRANCH_NAME) {
+          println "########## Installing jar files in local maven repository ##########"
+        
+          
+          docker.image(MAVEN_IMAGE).inside(MAVEN_VOLUME) {
+            sh("mvn help:evaluate -Dexpression=settings.localRepository")
+            sh('mvn deploy -Duser.home=/var/maven')
+          }
+        }
+      }
+      
     } catch(e) {
     
       println "Err: Incremental Build failed with Error: " + e.toString()
