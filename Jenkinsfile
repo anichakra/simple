@@ -31,14 +31,13 @@ node {
   } else {
     throw new Exception("Branch not considered for pipeline: + ${env.BRANCH_NAME} ")
   }
-
-  def AWS_ECS_TASK_COUNT    = 3 
   // ECS Service and Task Definition Name
   def AWS_ECS_SERVICE_NAME  =  ARTIFACT_ID
   def AWS_ECS_TASK_DEF_NAME =  ARTIFACT_ID + "-task"
   // Whether to use the updated task definition and make a new revision
   def UPDATE_AWS_ECS_TASKDEF_REV = true
-          
+  def AWS_ECS_TASK_COUNT    = 3 
+  
   // ID of credentials in Jenkins as configured in Jenkins project
   def AWS_CREDENTIAL_ID = "aws_id"  
       
@@ -116,12 +115,8 @@ node {
       stage('ECS Deploy') {
         println "########## Deploying services to ECS ##########"
         
-        def awsCli
-        try {
-           awsCli = docker.image("aws-cli:latest")
-        } catch (ee) {
-           awsCli = docker.build("aws-cli", "./aws")      
-        }
+        def awsCli = docker.build("aws-cli", "./aws")      
+        
         awsCli.inside("-v $HOME/.aws:/root/.aws") {
           withCredentials(
             [[
