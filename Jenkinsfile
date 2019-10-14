@@ -75,7 +75,7 @@ node {
       stage('Sonar Analysis') {
         println "########## Executing sonar plugin ##########"
         docker.image(MAVEN_IMAGE).inside(MAVEN_VOLUME) {
-          sh("mvn sonar:sonar -Dsonar.projectKey=" + ARTIFACT_ID + " -Dsonar.host.url=" + SONAR_URL + " -Dsonar.login=" + SONAR_TOKEN)
+          sh("mvn sonar:sonar " + MAVEN_ARG + " -Dsonar.projectKey=" + ARTIFACT_ID + " -Dsonar.host.url=" + SONAR_URL + " -Dsonar.login=" + SONAR_TOKEN)
         }
       }
       
