@@ -76,7 +76,6 @@ node {
           docker.image("maven:3.6.2-amazoncorretto-11").inside("-v maven-repo:/root/.m2") {
             sh('mvn clean install')
           }
-         // sh 'docker run -it --rm  maven:3.6.2-amazoncorretto-11 mvn clean package' 
         }
       }
             
