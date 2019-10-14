@@ -47,7 +47,7 @@ node {
       // Docker image details - might not be required to be changed often    
       def MAVEN_IMAGE  = "maven:3.6.2-amazoncorretto-11"
       def MAVEN_HOME   = "/var/maven"
-      def MAVEN_VOLUME = "-v $HOME/.m2:" +MAVEN_HOME + " -e MAVEN_CONFIG="+MAVEN_HOME + "/.m2"
+      def MAVEN_VOLUME = "-v /home/ec2-user/.m2:" +MAVEN_HOME + " -e MAVEN_CONFIG="+MAVEN_HOME + "/.m2"
       
       
       sh('printenv | sort')
@@ -69,7 +69,7 @@ node {
         if(env.BRANCH_NAME == DEV_BRANCH_NAME) {
           println "########## Installing jar files in local maven repository ##########"
           docker.image(MAVEN_IMAGE).inside(MAVEN_VOLUME) {
-            sh("mvn clean install -Duser.home=" + MAVEN_HOME)
+            sh("mvn install -Duser.home=" + MAVEN_HOME + " -Dnexus.url=" + NEXUS_URL)
           }
         }
       }
