@@ -61,15 +61,22 @@ node {
         println "########## Executing unit test cases ##########"
         docker.image(MAVEN_IMAGE).inside(MAVEN_VOLUME) {
           sh("mvn help:evaluate -Dexpression=settings.localRepository")
-          sh("mvn clean test -Duser.home=" + MAVEN_HOME)
+          sh("mvn clean test -Duser.home=" + MAVEN_HOME + " -Dnexus.url=" + NEXUS_URL)
         }
       }
    
+      stage('Build') {
+        println "########## Executing unit test cases ##########"
+        docker.image(MAVEN_IMAGE).inside(MAVEN_VOLUME) {
+          sh("mvn package -Duser.home=" + MAVEN_HOME + " -Dnexus.url=" + NEXUS_URL)
+        }
+      }
+      
       stage('JAR Install') {
         if(env.BRANCH_NAME == DEV_BRANCH_NAME) {
           println "########## Installing jar files in local maven repository ##########"
           docker.image(MAVEN_IMAGE).inside(MAVEN_VOLUME) {
-            sh("mvn install -Duser.home=" + MAVEN_HOME + " -Dnexus.url=" + NEXUS_URL)
+            sh("mvn install -Dmaven.test.skip=true -Duser.home=" + MAVEN_HOME + " -Dnexus.url=" + NEXUS_URL)
           }
         }
       }
