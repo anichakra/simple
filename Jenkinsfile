@@ -58,7 +58,7 @@ node {
       stage('Unit Testing') {
         println "########## Executing unit test cases ##########"
         docker.image(MAVEN_IMAGE).inside(MAVEN_VOLUME) {
-          sh("mvn clean test")
+          sh("mvn clean test -Duser.home=/var/maven")
         }
       }
    
