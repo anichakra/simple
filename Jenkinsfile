@@ -96,9 +96,7 @@ node {
           }
         }
       }      
-      
-      // Push jars to nexus
-  
+        
       stage('Docker Image Creation') {
         if(env.BRANCH_NAME == DEV_BRANCH_NAME) {
           println "########## Creating docker images ##########"
@@ -120,8 +118,13 @@ node {
  
       stage('ECS Deploy') {
         println "########## Deploying services to ECS ##########"
-        def awsCli = docker.image("aws-cli:latest")
-        if(!awsCli) awsCli = docker.build("aws-cli", "./aws")
+        
+        def awsCli
+        try {
+           awsCli = docker.image("aws-cli:latest")
+        } catch (ee) {
+           awsCli = docker.build("aws-cli", "./aws")      
+        }
         awsCli.inside("-v $HOME/.aws:/root/.aws") {
           withCredentials(
             [[
