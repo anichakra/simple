@@ -3,6 +3,12 @@
 // @author Anirban Chakraborty
 
 node {
+   
+  // Allowable branch names of the repository for a multibranch pipeline 
+  def MASTER_BRANCH_NAME = "master"
+  def DEVELOP_BRANCH_NAME = "develop"
+  def UAT_BRANCH_NAME = "uat"
+  
   // Maven Artifact Id and Version
   def ARTIFACT_ID = "simple-rest-service"
   def VERSION     = "0.0.1.BUILD-SNAPSHOT"
@@ -12,9 +18,20 @@ node {
   
   // Nexus URL
   def NEXUS_URL="http://cloudnativelab-nexus-alb-1228301333.us-east-1.elb.amazonaws.com"
-   
-  // AWS ECS attributes
-  def AWS_ECS_CLUSTER_NAME  = "cloudnativelab-ecs-cluster"
+
+  // AWS ECS attributes (should change accordingly)
+  def AWS_ECS_CLUSTER_NAME
+  //Provide/override all required values based on environment
+  if  (env.BRANCH_NAME == UAT_BRANCH_NAME) {
+    AWS_ECS_CLUSTER_NAME  = "cloudnativelab-ecs-cluster-uat"
+  } else if (env.BRANCH_NAME == DEVELOP_BRANCH_NAME) {
+    AWS_ECS_CLUSTER_NAME  = "cloudnativelab-ecs-cluster"
+  } else if (env.BRANCH_NAME == MASTER_BRANCH_NAME) {
+    AWS_ECS_CLUSTER_NAME  = "cloudnativelab-ecs-cluster"
+  } else {
+    throw new Exception("Branch not considered for pipeline: + ${env.BRANCH_NAME} ")
+  }
+
   def AWS_ECS_TASK_COUNT    = 3 
   // ECS Service and Task Definition Name
   def AWS_ECS_SERVICE_NAME  =  ARTIFACT_ID
@@ -28,19 +45,6 @@ node {
   // AWS attributes - might not be required to be changed often   
   def AWS_REGION  = "us-east-1"
   def AWS_ACCOUNT = "595233065713" 
-  
-  // Branch names of the repository for a multibranch pipeline 
-  def DEV_BRANCH_NAME = "master"
-  def UAT_BRANCH_NAME = "uat"
-  def PRD_BRANCH_NAME = "prd"
-  def SIT_BRANCH_NAME = "sit"
-  
-  //Provide/override all required values based on environment
-  if  (env.BRANCH_NAME == UAT_BRANCH_NAME) {
-    AWS_ECS_CLUSTER_NAME  = "cloudnativelab-ecs-cluster-uat"
-  } else if (env.BRANCH_NAME == PRD_BRANCH_NAME) {
-    AWS_ECS_CLUSTER_NAME  = "cloudnativelab-ecs-prd-cluster-prd"
-  }
   
   ws("workspace/${env.JOB_NAME}/${env.BRANCH_NAME}") {
     try {      
