@@ -48,7 +48,7 @@ node {
       def MAVEN_IMAGE  = "maven:3.6.2-amazoncorretto-11"
       def MAVEN_HOME   = "/var/maven"
       def MAVEN_VOLUME = "-v /home/ec2-user/.m2:" +MAVEN_HOME + "./m2" + " -e MAVEN_CONFIG="+MAVEN_HOME + "/.m2"
-      
+      def MAVEN_ARG    = "-Dmaven.test.skip=true -Duser.home=" + MAVEN_HOME + " -Dnexus.url=" + NEXUS_URL
       
       sh('printenv | sort')
       println "Pipeline started in workspace/" + env.JOB_NAME + "/" + env.BRANCH_NAME
@@ -61,14 +61,14 @@ node {
         println "########## Executing unit test cases ##########"
         docker.image(MAVEN_IMAGE).inside(MAVEN_VOLUME) {
           sh("mvn help:evaluate -Dexpression=settings.localRepository")
-          sh("mvn clean test -Duser.home=" + MAVEN_HOME + " -Dnexus.url=" + NEXUS_URL)
+          sh("mvn clean test " + MAVEN_ARG)
         }
       }
    
       stage('Build') {
         println "########## Executing unit test cases ##########"
         docker.image(MAVEN_IMAGE).inside(MAVEN_VOLUME) {
-          sh("mvn package -Duser.home=" + MAVEN_HOME + " -Dnexus.url=" + NEXUS_URL)
+          sh("mvn package " + MAVEN_ARG)
         }
       }
       
@@ -76,7 +76,7 @@ node {
         if(env.BRANCH_NAME == DEV_BRANCH_NAME) {
           println "########## Installing jar files in local maven repository ##########"
           docker.image(MAVEN_IMAGE).inside(MAVEN_VOLUME) {
-            sh("mvn install -Dmaven.test.skip=true -Duser.home=" + MAVEN_HOME + " -Dnexus.url=" + NEXUS_URL)
+            sh("mvn install " + MAVEN_ARG)
           }
         }
       }
@@ -85,7 +85,7 @@ node {
         if(env.BRANCH_NAME == DEV_BRANCH_NAME) {
           println "########## Deploying jar files to Nexus ##########"
           docker.image(MAVEN_IMAGE).inside(MAVEN_VOLUME) {
-            sh("mvn deploy -Duser.home=" + MAVEN_HOME + " -Dnexus.url=" + NEXUS_URL)
+            sh("mvn deplouy " + MAVEN_ARG)
           }
         }
       }
