@@ -9,4 +9,3 @@ WORKDIR /aws
 
 CMD sh
 
-FROM amazon/aws-xray-daemon:1
