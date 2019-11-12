@@ -15,7 +15,6 @@
             "essential": true
         },{
     "name": "xray-sidecar",
-    "mountPoints": [],
     "image": "amazon/aws-xray-daemon:1",
     "cpu": 0,
     "portMappings": [
@@ -26,14 +25,13 @@
       }
     ],
     "essential": true,
-    "volumesFrom": []
   }
     ], 
     "requiresCompatibilities": [
         "FARGATE"
     ], 
-    "cpu": "512", 
-    "memory": "1024",
+    "cpu": "1024", 
+    "memory": "2048",
     "executionRoleArn": "arn:aws:iam::%AWS_ACCOUNT%:role/ecsTaskExecutionRole"
 }
 
