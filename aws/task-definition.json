@@ -24,7 +24,7 @@
 		},
 		{
 			"name": "xray-sidecar",
-			"image": "amazon/aws-xray-daemon:1",
+			"image":"%AWS_ACCOUNT%.dkr.ecr.us-east-1.amazonaws.com/amazon/aws-xray-daemon:1",
 			"cpu": 0,
 			"portMappings": [
 				{

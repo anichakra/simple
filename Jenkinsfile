@@ -115,7 +115,7 @@ node {
         }
         
         sh("docker rmi " + ARTIFACT_ID + ":" + VERSION)  
-                sh("docker rmi amazon/aws-xray-daemon:1")   
+              //  sh("docker rmi amazon/aws-xray-daemon:1")   
          
       }      
  

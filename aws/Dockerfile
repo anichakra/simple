@@ -8,3 +8,5 @@ RUN apk -uv add --no-cache groff jq less && \
 WORKDIR /aws
 
 CMD sh
+
+FROM amazon/aws-xray-daemon:1
