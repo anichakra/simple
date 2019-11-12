@@ -24,7 +24,7 @@
         "hostPort": 2000
       }
     ],
-    "essential": true,
+    "essential": true
   }
     ], 
     "requiresCompatibilities": [
