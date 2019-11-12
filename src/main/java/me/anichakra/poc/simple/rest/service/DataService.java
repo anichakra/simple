@@ -16,7 +16,6 @@ import me.anichakra.poc.simple.rest.domain.PropertyData;
 @Slf4j
 @XRayEnabled
 public class DataService {
-
 	public List<AssetData> getAsset(String account) {
 		List<AssetData> assetDataList = new ArrayList<AssetData>();
 		String node = System.getProperty("node.id") ;
