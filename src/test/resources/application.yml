@@ -1,9 +1,3 @@
-microservice:
-  packages: com.flagstar.servicing
-  
-test:
-  print-data: true
-  print-exception: true
 
 spring:
   jackson:
