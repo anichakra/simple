@@ -1,4 +1,4 @@
-{
+[{
     "family": "simple-rest-service-task", 
     "networkMode": "awsvpc", 
     "containerDefinitions": [
@@ -21,5 +21,29 @@
     "cpu": "512", 
     "memory": "1024",
     "executionRoleArn": "arn:aws:iam::%AWS_ACCOUNT%:role/ecsTaskExecutionRole"
-}
+},
+ {
+    "name": "xray-sidecar",
+    "mountPoints": [],
+    "image": "amazon/aws-xray-daemon:1",
+    "cpu": 0,
+    "portMappings": [
+      {
+        "protocol": "udp",
+        "containerPort": 2000,
+        "hostPort": 2000
+      }
+    ],
+    "logConfiguration": {
+      "logDriver": "awslogs",
+      "options": {
+        "awslogs-region": "us-east-1",
+        "awslogs-stream-prefix": "ecs",
+        "awslogs-group": "/ecs/sample-app1"
+      }
+    },
+    "essential": true,
+    "volumesFrom": []
+  }
+]
 

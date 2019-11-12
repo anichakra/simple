@@ -26,11 +26,6 @@ public class NodeController {
         return System.getProperty("node.id") ;
     }
 
-    
-    private String getAddress(HttpServletRequest request) {
-        return request.getLocalAddr();
-    }
-
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/headers")
     @ResponseBody
