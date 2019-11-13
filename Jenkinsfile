@@ -109,9 +109,9 @@ node {
                            "ecr:" + AWS_REGION + ":" + AWS_CREDENTIAL_ID) {
           docker.image(ARTIFACT_ID+":"+VERSION).push()
         }
-        docker.withRegistry("https://" + AWS_ACCOUNT + ".dkr.ecr." + AWS_REGION + ".amazonaws.com", 
-                           "ecr:" + AWS_REGION + ":" + AWS_CREDENTIAL_ID) {
-          docker.image("amazon/aws-xray-daemon:1").push()
+       // docker.withRegistry("https://" + AWS_ACCOUNT + ".dkr.ecr." + AWS_REGION + ".amazonaws.com", 
+        //                   "ecr:" + AWS_REGION + ":" + AWS_CREDENTIAL_ID) {
+        //  docker.image("amazon/aws-xray-daemon:1").push()
         }
         
         sh("docker rmi " + ARTIFACT_ID + ":" + VERSION)  
