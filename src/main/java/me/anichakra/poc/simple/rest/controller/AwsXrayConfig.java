@@ -5,14 +5,13 @@ import javax.servlet.Filter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-//import com.amazonaws.xray.javax.servlet.AWSXRayServletFilter;
+import com.amazonaws.xray.javax.servlet.AWSXRayServletFilter;
 
-//@Configuration
+@Configuration
 public class AwsXrayConfig {
 
   @Bean
   public Filter tracingFilter() {
-  //  return new AWSXRayServletFilter("sample-app3");
-	  return null;
+    return new AWSXRayServletFilter("simple-rest-service");
   }
 }

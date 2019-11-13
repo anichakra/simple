@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-//import com.amazonaws.xray.spring.aop.XRayEnabled;
+import com.amazonaws.xray.spring.aop.XRayEnabled;
 
 import lombok.extern.slf4j.Slf4j;
 import me.anichakra.poc.simple.rest.domain.AssetData;
@@ -14,11 +14,11 @@ import me.anichakra.poc.simple.rest.domain.PropertyData;
 
 @Service
 @Slf4j
-//@XRayEnabled
+@XRayEnabled
 public class DataService {
 	public List<AssetData> getAsset(String account) {
 		List<AssetData> assetDataList = new ArrayList<AssetData>();
-		String node = System.getProperty("node.id") ;
+		String node = System.getProperty("node.id");
 		assetDataList.add(new AssetData(account, "asset-" + node + " " + account, System.currentTimeMillis()));
 		assetDataList.add(new AssetData(account, "asset-" + node + " " + account, System.currentTimeMillis()));
 		assetDataList.add(new AssetData(account, "asset-" + node + " " + account, System.currentTimeMillis()));
@@ -26,7 +26,7 @@ public class DataService {
 	}
 
 	public IncomeData getIncome(String account) {
-	    log.debug(account);
+		log.debug(account);
 		return new IncomeData(account, "income- " + account, System.currentTimeMillis(), 1000.999d);
 	}
 
