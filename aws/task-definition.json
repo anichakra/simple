@@ -19,8 +19,7 @@
 					"awslogs-stream-prefix": "ecs",
 					"awslogs-group": "simple-rest-service"
 				}
-			}//,
-			// "essential": true
+			}
 		},
 		{
 			"name": "xray-sidecar",
