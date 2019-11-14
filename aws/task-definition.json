@@ -22,7 +22,10 @@
 					"protocol": "tcp"
 				}
 			],
-			"links": {
+			"links": [
+				"xray-daemon"
+			],
+			"logConfiguration": {
 				"logDriver": "awslogs",
 				"options": {
 					"awslogs-region": "us-east-1",
