@@ -12,7 +12,7 @@
 				},
 				{
 					"name": "AWS_XRAY_DAEMON_ADDRESS",
-					"value": "xray-daemon:2000"
+					"value": "127.0.0.1:2000"
 				}
 			],
 			"portMappings": [
@@ -22,8 +22,6 @@
 					"protocol": "tcp"
 				}
 			],
-			
-			
 			"logConfiguration": {
 				"logDriver": "awslogs",
 				"options": {
@@ -36,6 +34,14 @@
 		{
 			"name": "xray-daemon",
 			"image": "%AWS_ACCOUNT%.dkr.ecr.us-east-1.amazonaws.com/amazon/aws-xray-daemon:1",
+			"entryPoint": [
+				"/usr/bin/xray",
+				"-b",
+				"0.0.0.0:2000",
+				"-o"
+			],
+			"cpu": 32,
+			"memoryReservation": 256,
 			"portMappings": [
 				{
 					"protocol": "udp",
