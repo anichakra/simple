@@ -5,16 +5,7 @@
 		{
 			"name": "simple-rest-service-container",
 			"image": "%AWS_ACCOUNT%.dkr.ecr.us-east-1.amazonaws.com/simple-rest-service:%BUILD_TAG%",
-			"environment": [
-				{
-					"name": "AWS_REGION",
-					"value": "us-east-1"
-				},
-				{
-					"name": "AWS_XRAY_DAEMON_ADDRESS",
-					"value": "127.0.0.1:2000"
-				}
-			],
+			
 			"portMappings": [
 				{
 					"containerPort": 8080,
@@ -34,12 +25,6 @@
 		{
 			"name": "xray-daemon",
 			"image": "%AWS_ACCOUNT%.dkr.ecr.us-east-1.amazonaws.com/amazon/aws-xray-daemon:1",
-			"entryPoint": [
-				"/usr/bin/xray",
-				"-b",
-				"0.0.0.0:2000",
-				"-o"
-			],
 			"cpu": 32,
 			"memoryReservation": 256,
 			"portMappings": [
