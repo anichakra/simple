@@ -5,7 +5,12 @@
 		{
 			"name": "simple-rest-service-container",
 			"image": "%AWS_ACCOUNT%.dkr.ecr.us-east-1.amazonaws.com/simple-rest-service:%BUILD_TAG%",
-			
+			"environment": [
+				{
+					"name": "AWS_REGION",
+					"value": "us-east-1"
+				}
+			],
 			"portMappings": [
 				{
 					"containerPort": 8080,
@@ -27,6 +32,20 @@
 			"image": "%AWS_ACCOUNT%.dkr.ecr.us-east-1.amazonaws.com/amazon/aws-xray-daemon:1",
 			"cpu": 32,
 			"memoryReservation": 256,
+			"environment": [
+				{
+					"name": "AWS_REGION",
+					"value": "us-east-1"
+				},
+				{
+					"name": "AWS_ACCESS_KEY_ID",
+					"value": "AKIAYVFVHZLYSUQUWR7G"
+				},
+				{
+					"name": "AWS_SECRET_ACCESS_KEY",
+					"value": "25UsoSftYBlFWR5WaoJn2oAn4miGS83AJ1R5UkhU"
+				}
+			],
 			"portMappings": [
 				{
 					"protocol": "udp",
