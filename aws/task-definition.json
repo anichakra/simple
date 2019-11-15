@@ -36,14 +36,6 @@
 				{
 					"name": "AWS_REGION",
 					"value": "us-east-1"
-				},
-				{
-					"name": "AWS_ACCESS_KEY_ID",
-					"value": "AKIAYVFVHZLYSUQUWR7G"
-				},
-				{
-					"name": "AWS_SECRET_ACCESS_KEY",
-					"value": "25UsoSftYBlFWR5WaoJn2oAn4miGS83AJ1R5UkhU"
 				}
 			],
 			"portMappings": [
