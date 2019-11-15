@@ -35,8 +35,6 @@
 		{
 			"name": "xray-daemon",
 			"image": "%AWS_ACCOUNT%.dkr.ecr.us-east-1.amazonaws.com/amazon/aws-xray-daemon:1",
-			"cpu": 64,
-			"memoryReservation": 256,
 			"portMappings": [
 				{
 					"protocol": "udp",
@@ -59,8 +57,8 @@
 	"requiresCompatibilities": [
 		"FARGATE"
 	],
-	"cpu": "1024",
-	"memory": "2048",
-	"executionRoleArn": "arn:aws:iam::%AWS_ACCOUNT%:role/ecsTaskExecutionRole"
+	"cpu": "512",
+	"memory": "1024",
+	"executionRoleArn": "arn:aws:iam::%AWS_ACCOUNT%:role/ecsTaskExecutionRole,arn:aws:iam::%AWS_ACCOUNT%:role/xray-cross-account"
 }
 
