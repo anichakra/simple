@@ -22,9 +22,7 @@
 					"protocol": "tcp"
 				}
 			],
-			"links": [
-				"xray-daemon"
-			],
+			
 			"logConfiguration": {
 				"logDriver": "awslogs",
 				"options": {
