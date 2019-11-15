@@ -35,7 +35,7 @@
 			}
 		},
 		{
-			"name": "xray-sidecar",
+			"name": "xray-daemon",
 			"image": "%AWS_ACCOUNT%.dkr.ecr.us-east-1.amazonaws.com/amazon/aws-xray-daemon:1",
 			"cpu": 64,
 			"memoryReservation": 256,
