@@ -63,6 +63,6 @@
 	"cpu": "512",
 	"memory": "1024",
 	"executionRoleArn": "arn:aws:iam::%AWS_ACCOUNT%:role/ecsTaskExecutionRole",
-    "taskRoleArn": "arn:aws:iam::%AWS_ACCOUNT%:role/ecsTaskExecutionRole"
+    "taskRoleArn": "arn:aws:iam::%AWS_ACCOUNT%:role/xray-cross-account"
 }
 
