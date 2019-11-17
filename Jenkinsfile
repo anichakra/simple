@@ -39,7 +39,7 @@ node {
   def AWS_ECS_TASK_COUNT    = 3 
   
   // ID of credentials in Jenkins as configured in Jenkins project
-  def AWS_CREDENTIAL_ID = "aws_new_id"  
+  def AWS_CREDENTIAL_ID = "aws_new_key"  
       
   // AWS attributes - might not be required to be changed often   
   def AWS_REGION  = "us-east-1"
