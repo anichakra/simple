@@ -18,6 +18,7 @@ node {
   
   // Nexus URL
   def NEXUS_URL="http://cloudnativelab-nexus-alb-1228301333.us-east-1.elb.amazonaws.com"
+  
 
   // AWS ECS attributes (should change accordingly)
   def AWS_ECS_CLUSTER_NAME
