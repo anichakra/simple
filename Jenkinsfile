@@ -3,7 +3,6 @@
 // @author Anirban Chakraborty
 
 node {
-   
   // Allowable branch names of the repository for a multibranch pipeline 
   def MASTER_BRANCH_NAME = "master"
   def DEVELOP_BRANCH_NAME = "develop"
