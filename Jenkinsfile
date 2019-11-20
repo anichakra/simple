@@ -10,7 +10,7 @@ node {
   
   // Maven Artifact Id and Version
   def ARTIFACT_ID = "simple-rest-service"
-  def VERSION     = "0.0.2.RC"
+  def VERSION     = "0.0.3.RC"
   // Sonar configuration attributes
   def SONAR_TOKEN = "0af30a17a1f3987a83773a9096ef1306957b5bd5"
   def SONAR_URL = "http://cloudnativelab-sonar-alb-1809467691.us-east-1.elb.amazonaws.com"    
