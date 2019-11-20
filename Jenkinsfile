@@ -32,9 +32,8 @@ node {
   } else {
     throw new Exception("Branch not considered for pipeline: + ${env.BRANCH_NAME} ")
   }
-  // ECS Service and Task Definition Name
+  // ECS Service 
   def AWS_ECS_SERVICE_NAME  =  ARTIFACT_ID
-  def AWS_ECS_TASK_DEF_NAME =  ARTIFACT_ID + "-task"
   // Whether to use the updated task definition and make a new revision
   def UPDATE_AWS_ECS_TASKDEF_REV = true
   def AWS_ECS_TASK_COUNT    = 3 
@@ -116,6 +115,15 @@ node {
  
       stage('ECS Deploy') {
         println "########## Deploying services to ECS ##########"
+        // major and minor version only
+        def AWS_VERSION = VERSION;
+        int firstDot = VERSION.indexOf('.')
+        if (firstDot > 0) {
+            int secondDot = VERSION.indexOf('.', VERSION.indexOf('.') + 1)
+            if (secondDot > 0)
+                 AWS_VERSION = VERSION.substring(0, secondDot).replace('.', '-')
+        }
+        def AWS_ECS_TASK_DEF_NAME =  ARTIFACT_ID + "-task-" +  AWS_VERSION
         
         def awsCli = docker.build("aws-cli", "./aws")      
         
@@ -187,12 +195,15 @@ node {
               sh("sed -e 's;%AWS_ACCOUNT%;" + AWS_ACCOUNT + ";g' \
                   aws/task-definition-" + "tmp" + ".json >   \
                   aws/task-definition-" + VERSION + ".json")
+              sh("sed -e 's;%AWS_VERSION%;" + AWS_VERSION + ";g' \
+                  aws/task-definition-" + "tmp" + ".json >   \
+                  aws/task-definition-" + AWS_VERSION + ".json")
                               
               // Register the new [TaskDefinition]
               sh("aws ecs register-task-definition --region " + AWS_REGION \
                                              + " --family " + AWS_ECS_TASK_DEF_NAME \
                                              + " --cli-input-json file://aws/task-definition-" + VERSION + ".json") 
-            }
+            }	
             
             // Get the last registered [TaskDefinition#revision]
             def taskRevisionCmd = "aws ecs describe-task-definition --region " + AWS_REGION \

@@ -1,6 +1,10 @@
 {
-	"family": "simple-rest-service-task",
+	"family": "simple-rest-service-task-%AWS_VERSION%",
 	"networkMode": "awsvpc",
+	"cpu": "512",
+	"memory": "1024",
+	"executionRoleArn": "arn:aws:iam::%AWS_ACCOUNT%:role/ecsTaskExecutionRole",
+	"taskRoleArn": "arn:aws:iam::%AWS_ACCOUNT%:role/ecsTaskExecutionRole",
 	"containerDefinitions": [
 		{
 			"name": "simple-rest-service-container",
@@ -23,7 +27,7 @@
 				"options": {
 					"awslogs-region": "us-east-1",
 					"awslogs-stream-prefix": "ecs",
-					"awslogs-group": "simple-rest-service"
+					"awslogs-group": "simple-rest-service-%AWS_VERSION%"
 				}
 			}
 		},
@@ -59,10 +63,6 @@
 	],
 	"requiresCompatibilities": [
 		"FARGATE"
-	],
-	"cpu": "512",
-	"memory": "1024",
-	"executionRoleArn": "arn:aws:iam::%AWS_ACCOUNT%:role/ecsTaskExecutionRole",
-    "taskRoleArn": "arn:aws:iam::%AWS_ACCOUNT%:role/ecsTaskExecutionRole"
+	]
 }
 
