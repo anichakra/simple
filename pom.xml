@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>me.anichakra.poc</groupId>
 	<artifactId>simple-rest-service</artifactId>
-	<version>0.0.1.BUILD-SNAPSHOT</version>
+	<version>0.0.2.RC</version>
 	<name>Simple Rest Service</name>
 	<packaging>jar</packaging>
 	<description>Root pom of all LMU Service Framework projects</description>
