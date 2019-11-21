@@ -10,7 +10,7 @@ node {
   
   // Maven Artifact Id and Version
   def ARTIFACT_ID = "simple-rest-service"
-  def VERSION     = "0.0.4.RC"
+  def VERSION     = "0.0.5.RC"
   // Sonar configuration attributes
   def SONAR_TOKEN = "0af30a17a1f3987a83773a9096ef1306957b5bd5"
   def SONAR_URL = "http://cloudnativelab-sonar-alb-1809467691.us-east-1.elb.amazonaws.com"    
@@ -194,7 +194,7 @@ node {
                   aws/task-definition-" + "tmp1" + ".json")
               sh("sed -e 's;%AWS_VERSION%;" + AWS_VERSION + ";g'      \
                   aws/task-definition-" + "tmp1" + ".json >           \
-                  aws/task-definition-" + AWS_VERSION + ".json")
+                  aws/task-definition-" + VERSION + ".json")
                               
               // Register the new [TaskDefinition]
               sh("aws ecs register-task-definition --region " + AWS_REGION \
