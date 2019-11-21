@@ -10,7 +10,7 @@ node {
   
   // Maven Artifact Id and Version
   def ARTIFACT_ID = "simple-rest-service"
-  def VERSION     = "0.0.3.RC"
+  def VERSION     = "0.0.4.RC"
   // Sonar configuration attributes
   def SONAR_TOKEN = "0af30a17a1f3987a83773a9096ef1306957b5bd5"
   def SONAR_URL = "http://cloudnativelab-sonar-alb-1809467691.us-east-1.elb.amazonaws.com"    
@@ -109,7 +109,6 @@ node {
           docker.image(ARTIFACT_ID+":"+VERSION).push()
           sh("docker rmi " + ARTIFACT_ID + ":" + VERSION)    
         }
-         
       }      
  
       stage('ECS Deploy') {
@@ -185,17 +184,16 @@ node {
               }
             }
             
-                     
             if(UPDATE_AWS_ECS_TASKDEF_REV) {
               // Creating task definition file from workspace with a version
-              sh("sed -e 's;%BUILD_TAG%;" + VERSION + ";g'       \
-                  aws/task-definition.json >                \
+              sh("sed -e 's;%BUILD_TAG%;" + VERSION + ";g'            \
+                  aws/task-definition.json >                          \
                   aws/task-definition-" + "tmp" + ".json")
-              sh("sed -e 's;%AWS_ACCOUNT%;" + AWS_ACCOUNT + ";g' \
-                  aws/task-definition-" + "tmp" + ".json >   \
+              sh("sed -e 's;%AWS_ACCOUNT%;" + AWS_ACCOUNT + ";g'      \
+                  aws/task-definition-" + "tmp" + ".json >            \
                   aws/task-definition-" + "tmp1" + ".json")
-              sh("sed -e 's;%AWS_VERSION%;" + AWS_VERSION + ";g' \
-                  aws/task-definition-" + "tmp1" + ".json >   \
+              sh("sed -e 's;%AWS_VERSION%;" + AWS_VERSION + ";g'      \
+                  aws/task-definition-" + "tmp1" + ".json >           \
                   aws/task-definition-" + AWS_VERSION + ".json")
                               
               // Register the new [TaskDefinition]
