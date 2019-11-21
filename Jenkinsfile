@@ -193,9 +193,9 @@ node {
                   aws/task-definition-" + "tmp" + ".json")
               sh("sed -e 's;%AWS_ACCOUNT%;" + AWS_ACCOUNT + ";g' \
                   aws/task-definition-" + "tmp" + ".json >   \
-                  aws/task-definition-" + VERSION + ".json")
+                  aws/task-definition-" + "tmp1" + ".json")
               sh("sed -e 's;%AWS_VERSION%;" + AWS_VERSION + ";g' \
-                  aws/task-definition-" + "tmp" + ".json >   \
+                  aws/task-definition-" + "tmp1" + ".json >   \
                   aws/task-definition-" + AWS_VERSION + ".json")
                               
               // Register the new [TaskDefinition]
