@@ -10,7 +10,7 @@ node {
   
   // Maven Artifact Id and Version
   def ARTIFACT_ID = "simple-rest-service"
-  def VERSION     = "0.0.5.RC"
+  def VERSION     = "0.0.6.RC"
   // Sonar configuration attributes
   def SONAR_TOKEN = "0af30a17a1f3987a83773a9096ef1306957b5bd5"
   def SONAR_URL = "http://cloudnativelab-sonar-alb-1809467691.us-east-1.elb.amazonaws.com"    
@@ -134,7 +134,7 @@ node {
               secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
             ]]) {
          
-            def currentTaskDefCmd = "aws ecs describe-task-definition --task-definition " + AWS_ECS_TASK_DEF_NAME \
+            def currentTaskDefCmd = "aws ecs describe-task-definition --region" + AWS_REGION  + " --task-definition " + AWS_ECS_TASK_DEF_NAME \
                 + " | egrep 'revision' | tr ',' ' ' | awk '{print \$2}'"
             def currTaskDef = sh (returnStdout: true, script: currentTaskDefCmd).trim()
           
