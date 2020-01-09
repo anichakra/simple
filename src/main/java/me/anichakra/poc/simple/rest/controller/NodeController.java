@@ -23,7 +23,7 @@ public class NodeController {
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/info")
     @ResponseBody
-    public String getNodeId(HttpServletRequest request) {
+    public String getNodeId(HttpServletRequest request, HttpServletResponse response) {
         return System.getProperty("node.id") ;
     }
 
