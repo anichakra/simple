@@ -193,12 +193,12 @@ node {
                   aws/task-definition-" + "tmp1" + ".json")
               sh("sed -e 's;%AWS_VERSION%;" + AWS_VERSION + ";g'      \
                   aws/task-definition-" + "tmp1" + ".json >           \
-                  aws/task-definition-" + VERSION + ".json")
+                  aws/task-definition-" + AWS_VERSION + ".json")
                               
               // Register the new [TaskDefinition]
               sh("aws ecs register-task-definition --region " + AWS_REGION \
                                              + " --family " + AWS_ECS_TASK_DEF_NAME \
-                                             + " --cli-input-json file://aws/task-definition-" + VERSION + ".json") 
+                                             + " --cli-input-json file://aws/task-definition-" + AWS_VERSION + ".json") 
             }	
             
             // Get the last registered [TaskDefinition#revision]
