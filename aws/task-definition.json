@@ -52,7 +52,7 @@
 			"logConfiguration": {
 				"logDriver": "awslogs",
 				"options": {
-					"awslogs-region": "us-east-1",
+					"awslogs-region": "us-east-1",	
 					"awslogs-stream-prefix": "ecs",
 					"awslogs-group": "simple-rest-service"
 				}

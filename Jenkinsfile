@@ -10,7 +10,7 @@ node {
   
   // Maven Artifact Id and Version
   def ARTIFACT_ID = "simple-rest-service"
-  def VERSION     = "0.0.6.RC"
+  def VERSION     = "0.0.1.BUILD-SNAPSHOT"
   // Sonar configuration attributes
   def SONAR_TOKEN = "0af30a17a1f3987a83773a9096ef1306957b5bd5"
   def SONAR_URL = "http://cloudnativelab-sonar-alb-1809467691.us-east-1.elb.amazonaws.com"    
@@ -18,7 +18,6 @@ node {
   // Nexus URL
   def NEXUS_URL="http://cloudnativelab-nexus-alb-1228301333.us-east-1.elb.amazonaws.com"
   
-
   // AWS ECS attributes (should change accordingly)
   def AWS_ECS_CLUSTER_NAME
   //Provide/override all required values based on environment
@@ -233,5 +232,6 @@ node {
     }
   }
 }
+
 
 
