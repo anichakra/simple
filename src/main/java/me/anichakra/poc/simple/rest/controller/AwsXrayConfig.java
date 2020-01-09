@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 import com.amazonaws.xray.entities.Segment;
 import com.amazonaws.xray.javax.servlet.AWSXRayServletFilter;
 
-@Configuration
+//@Configuration
 public class AwsXrayConfig {
 
 	@Bean

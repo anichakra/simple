@@ -24,6 +24,8 @@ public class NodeController {
     @GetMapping("/info")
     @ResponseBody
     public String getNodeId(HttpServletRequest request, HttpServletResponse response) {
+		((HttpServletResponse) response).addHeader("X-Amzn-My-Name", "Anirban");
+
         return System.getProperty("node.id") ;
     }
 
