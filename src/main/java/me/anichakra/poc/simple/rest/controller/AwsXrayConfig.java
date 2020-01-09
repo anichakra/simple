@@ -18,7 +18,7 @@ public class AwsXrayConfig {
 	public Filter tracingFilter() {
 		return new AWSXRayServletFilter("simple-rest-service") {
 			public Segment preFilter(ServletRequest request, ServletResponse response) {
-				((HttpServletResponse) response).addHeader("Abc", "Anirban");
+				((HttpServletResponse) response).addHeader("X-Amzn-My-Name", "Anirban");
 
 				return super.preFilter(request, response);
 
