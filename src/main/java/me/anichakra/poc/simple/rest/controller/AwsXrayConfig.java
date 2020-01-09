@@ -10,8 +10,7 @@ import org.springframework.context.annotation.Configuration;
 
 import com.amazonaws.xray.entities.Segment;
 import com.amazonaws.xray.javax.servlet.AWSXRayServletFilter;
-
-//@Configuration
+@Configuration
 public class AwsXrayConfig {
 
 	@Bean
@@ -19,7 +18,7 @@ public class AwsXrayConfig {
 		return new AWSXRayServletFilter("simple-rest-service") {
 			public Segment preFilter(ServletRequest request, ServletResponse response) {
 			
-				((HttpServletResponse) response).addHeader("X-Amzn-My-Name", "Anirban");
+				((HttpServletResponse) response).addHeader("My-Name2", "Anirban2");
 
 				return super.preFilter(request, response);
 
