@@ -41,7 +41,6 @@
 			**/generated/**/*,
 			**/model/**/*
 		</sonar.coverage.exclusions>
-
 	</properties>
 
 	<dependencyManagement>
