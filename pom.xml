@@ -9,7 +9,6 @@
 	<name>Simple Rest Service</name>
 	<packaging>jar</packaging>
 	<description>Root pom of all LMU Service Framework projects</description>
-
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
