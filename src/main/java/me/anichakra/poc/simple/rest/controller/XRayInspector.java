@@ -10,8 +10,8 @@ import org.springframework.stereotype.Component;
 import com.amazonaws.xray.entities.Subsegment;
 import com.amazonaws.xray.spring.aop.AbstractXRayInterceptor;
 
-@Aspect
-@Component
+//@Aspect
+//@Component
 public class XRayInspector extends AbstractXRayInterceptor {
 	@Override
 	protected Map<String, Map<String, Object>> generateMetadata(ProceedingJoinPoint proceedingJoinPoint,
