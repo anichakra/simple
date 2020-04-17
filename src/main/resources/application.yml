@@ -13,3 +13,9 @@ cloud:
       auto: true
       static: us-east-1
 
+# JSON formats and output rendition
+spring:
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    serialization:
+      INDENT_OUTPUT: true  
