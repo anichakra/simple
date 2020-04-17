@@ -20,8 +20,8 @@ import me.anichakra.poc.simple.rest.domain.PropertyData;
 public class DataService {
 	public List<AssetData> getAsset(String account) {
 		List<AssetData> assetDataList = new ArrayList<AssetData>();
-		String node = System.getProperty("node.id");
-		assetDataList.add(new AssetData(account, node, System.currentTimeMillis()));
+		assetDataList
+				.add(new AssetData(account, new Faker(Locale.ENGLISH).artist().name(), System.currentTimeMillis()));
 		String value;
 		value = new Faker(Locale.ENGLISH).artist().name();
 		assetDataList.add(new AssetData(account, value, System.currentTimeMillis()));
@@ -35,17 +35,17 @@ public class DataService {
 	public IncomeData getIncome(String account) {
 		log.debug(account);
 		return new IncomeData(account,
-				new Faker(Locale.ENGLISH).business().creditCardNumber() + ":" + new Faker(Locale.ENGLISH).currency()
-						+ ":" + new Faker(Locale.ENGLISH).company().name() + ":"
-						+ new Faker(Locale.ENGLISH).commerce().price() + ":"
-						+ new Faker(Locale.ENGLISH).commerce().productName(),
+				"$" + new Faker(Locale.ENGLISH).commerce().price() + ":" + new Faker(Locale.ENGLISH).company().name()
+						+ ":" + new Faker(Locale.ENGLISH).commerce().productName(),
 
 				System.currentTimeMillis(), 1000.999d);
 	}
 
 	public PropertyData getProperty(String account) {
 		return new PropertyData(account,
-				new Faker(Locale.ENGLISH).address().fullAddress(),
+				"Previous Owner:" + new Faker(Locale.ENGLISH).gameOfThrones().character() + ":" +
+						"House:" + new Faker(Locale.ENGLISH).gameOfThrones().house() + ":"
+						+ new Faker(Locale.ENGLISH).address().fullAddress(),
 				System.currentTimeMillis());
 	}
 
