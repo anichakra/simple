@@ -1,7 +1,5 @@
 package me.anichakra.poc.simple.rest.service;
 
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
