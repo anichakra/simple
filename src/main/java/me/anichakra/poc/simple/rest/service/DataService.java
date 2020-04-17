@@ -35,16 +35,16 @@ public class DataService {
 	public IncomeData getIncome(String account) {
 		log.debug(account);
 		return new IncomeData(account,
-				"$" + new Faker(Locale.ENGLISH).commerce().price() + ":" + new Faker(Locale.ENGLISH).company().name()
-						+ ":" + new Faker(Locale.ENGLISH).commerce().productName(),
+				"$" + new Faker(Locale.ENGLISH).commerce().price() + ", " + new Faker(Locale.ENGLISH).company().name()
+						+ ", " + new Faker(Locale.ENGLISH).commerce().productName(),
 
 				System.currentTimeMillis(), 1000.999d);
 	}
 
 	public PropertyData getProperty(String account) {
 		return new PropertyData(account,
-				"Previous Owner:" + new Faker(Locale.ENGLISH).gameOfThrones().character() + ":" +
-						"House:" + new Faker(Locale.ENGLISH).gameOfThrones().house() + ":"
+				"Previous Owner:" + new Faker(Locale.ENGLISH).gameOfThrones().character() + ", " +
+						"House:" + new Faker(Locale.ENGLISH).gameOfThrones().house() + ", "
 						+ new Faker(Locale.ENGLISH).address().fullAddress(),
 				System.currentTimeMillis());
 	}
