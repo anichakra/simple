@@ -9,6 +9,6 @@ public class IncomeData {
 
 	private String account;
 	private String incomeDetails;
-	private Long time;
+	private Long id;
 	private double salary;
 }

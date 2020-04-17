@@ -8,6 +8,6 @@ import lombok.Data;
 public class AssetData {
 	private String account;
 	private String assetDetails;
-	private Long time;
+	private Long id;
 	
 }

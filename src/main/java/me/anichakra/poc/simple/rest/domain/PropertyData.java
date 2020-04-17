@@ -9,7 +9,7 @@ public class PropertyData {
 
 	private String account;
 	private String propertyDetails;
-	private Long time;
+	private Long id;
 
 	
 	
