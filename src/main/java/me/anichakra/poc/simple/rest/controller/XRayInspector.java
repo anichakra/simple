@@ -12,6 +12,7 @@ import com.amazonaws.xray.spring.aop.AbstractXRayInterceptor;
 
 //@Aspect
 //@Component
+
 public class XRayInspector extends AbstractXRayInterceptor {
 	@Override
 	protected Map<String, Map<String, Object>> generateMetadata(ProceedingJoinPoint proceedingJoinPoint,
