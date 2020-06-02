@@ -18,6 +18,7 @@ node {
   // Nexus URL
   def NEXUS_URL="	"
   
+  
   // AWS ECS attributes (should change accordingly)
   def AWS_ECS_CLUSTER_NAME
   //Provide/override all required values based on environment
