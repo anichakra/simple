@@ -94,6 +94,7 @@ node {
         }
       }      
         
+        
       stage('Docker Image Creation') {
         println "########## Creating docker images ##########"
         docker.image(MAVEN_IMAGE).inside(MAVEN_VOLUME) {
