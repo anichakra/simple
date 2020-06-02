@@ -16,7 +16,7 @@ node {
   def SONAR_URL = "http://cloudnativelab-sonar-alb-1809467691.us-east-1.elb.amazonaws.com"    
   
   // Nexus URL
-  def NEXUS_URL="http://cloudnativelab-nexus-alb-1228301333.us-east-1.elb.amazonaws.com"
+  def NEXUS_URL="	"
   
   // AWS ECS attributes (should change accordingly)
   def AWS_ECS_CLUSTER_NAME
@@ -90,7 +90,7 @@ node {
       stage('JAR Upload') {
         println "########## Deploying jar files to Nexus ##########"
         docker.image(MAVEN_IMAGE).inside(MAVEN_VOLUME) {
-          sh("mvn deploy " + MAVEN_ARG)
+        //  sh("mvn deploy " + MAVEN_ARG)
         }
       }      
         
