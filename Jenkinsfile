@@ -231,6 +231,7 @@ node {
       stage('Cleanup') {
         println "Cleaning up"
         deleteDir()
+        
       }          
     }
   }
