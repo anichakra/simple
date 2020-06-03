@@ -72,6 +72,7 @@ node {
         docker.image(MAVEN_IMAGE).inside(MAVEN_VOLUME) {
           sh("mvn package " + MAVEN_ARG)
         }
+        
       }
       
       stage('Sonar Analysis') {
