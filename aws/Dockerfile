@@ -1,4 +1,4 @@
-FROM python:alpine
+FROM python:3.12.1-alpine3.19
 
 ARG CLI_VERSION=1.16.241
 
